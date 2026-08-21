@@ -115,6 +115,8 @@ label.check input{margin-top:3px;width:18px;height:18px;accent-color:var(--accen
 label.check span{flex:1}
 label.check.checked{background:var(--soft);border-color:var(--accent)}
 label.check.checked span{text-decoration:line-through;color:var(--muted)}
+label.check .checked-by{display:block;width:100%;font-size:11px;font-weight:700;color:var(--accent);margin-top:2px}
+label.check .checked-by:empty{display:none}
 .progress-line{font-size:12px;color:var(--muted);margin:-6px 0 14px}
 .source{font-size:13px;color:var(--muted);margin-top:10px}
 .source a{text-decoration:underline}
@@ -853,7 +855,15 @@ function imgFallback(el){
   var SHEET_SYNC_URL = 'https://script.google.com/macros/s/AKfycbxP11DrMoDrxMpmLkNMD96sBSfqI3x1OqKmyvxe0vEjWLWAhcaDrB5EAGBKNckS0Hi3Pg/exec';
 
   var allChecklistBoxes = {};
+  var checkedByEls = {};
   var progressUpdaters = [];
+
+  function formatWhen(dateStr){
+    if (!dateStr) return '';
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+  }
 
   function registerChecklist(containerId, progressId, noun){
     var container = document.getElementById(containerId);
@@ -867,6 +877,10 @@ function imgFallback(el){
     }
     boxes.forEach(function(cb){
       allChecklistBoxes[cb.dataset.store] = cb;
+      var meta = document.createElement('small');
+      meta.className = 'checked-by';
+      cb.closest('label.check').querySelector('span').appendChild(meta);
+      checkedByEls[cb.dataset.store] = meta;
       var key = 'ttn-' + cb.dataset.store;
       if (safeGet(key) === '1') {
         cb.checked = true;
@@ -917,11 +931,16 @@ function imgFallback(el){
     if (!items || !items.forEach) return;
     items.forEach(function(item){
       var cb = allChecklistBoxes[item.item_id];
-      if (!cb || cb === document.activeElement) return;
-      if (cb.checked !== !!item.checked) {
+      if (!cb) return;
+      if (cb !== document.activeElement && cb.checked !== !!item.checked) {
         cb.checked = !!item.checked;
         cb.closest('label.check').classList.toggle('checked', cb.checked);
         safeSet('ttn-' + item.item_id, cb.checked ? '1' : '0');
+      }
+      var meta = checkedByEls[item.item_id];
+      if (meta) {
+        var when = formatWhen(item.checked_at);
+        meta.textContent = (item.checked && item.checked_by) ? ('checked by ' + item.checked_by + (when ? ' · ' + when : '')) : '';
       }
     });
     progressUpdaters.forEach(function(fn){ fn(); });
