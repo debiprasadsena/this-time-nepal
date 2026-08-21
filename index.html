@@ -6,6 +6,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#15181a" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Nepal Trip">
 <title>This Time Nepal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,7 +56,12 @@ img{max-width:100%}
 .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#b7c8bf;font-weight:700}
 .namaste{font-family:var(--font-display);font-size:15px;letter-spacing:.02em;color:#e8c07a;margin:10px 0 0}
 h1{font-family:var(--font-display);font-weight:400;font-size:clamp(40px,8.5vw,84px);line-height:1;margin:14px 0 18px;letter-spacing:-.01em;text-wrap:balance}
-.hero p{max-width:760px;font-size:clamp(16px,3.6vw,19px);color:#d5d5d2;margin:0}
+.hero p{max-width:660px;font-size:clamp(16px,3.6vw,19px);color:#d5d5d2;margin:0}
+.hero .crew-line{font-family:var(--font-display);font-weight:400;font-size:clamp(14px,2.6vw,17px);letter-spacing:.03em;color:#e8c07a;margin:16px 0 0;max-width:660px}
+.countdown{display:inline-flex;align-items:baseline;gap:12px;margin-top:24px;padding:14px 20px;border:1px solid #3a3a37;border-radius:16px;background:rgba(255,255,255,.05)}
+.countdown .cd-num{font-family:var(--font-display);font-weight:400;font-size:32px;line-height:1;color:#e8c07a;white-space:nowrap}
+.countdown .cd-label{font-size:13px;color:#d5d5d2;letter-spacing:.01em}
+@media(max-width:520px){.countdown{padding:11px 16px;gap:10px}.countdown .cd-num{font-size:26px}.countdown .cd-label{font-size:12.5px}}
 .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
 .pill{border:1px solid #4a4a47;border-radius:999px;padding:9px 13px;font-size:13px;color:#eee;line-height:1.2}
 nav{position:sticky;top:0;z-index:10;background:var(--bg);background:color-mix(in srgb, var(--bg) 94%, transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
@@ -87,8 +98,16 @@ table{width:100%;min-width:640px;border-collapse:collapse;background:var(--card)
 th,td{text-align:left;padding:14px;border-bottom:1px solid var(--line);vertical-align:top}
 th{background:var(--surface2);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
 tr:last-child td{border-bottom:0}
+tr.total td{background:var(--soft);font-weight:800}
+tr.optional td{color:var(--muted);font-style:italic}
 .checks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .check{background:var(--card);border:1px solid var(--line);padding:13px 15px;border-radius:12px}
+label.check{display:flex;align-items:flex-start;gap:10px;cursor:pointer;user-select:none;transition:background .15s ease,border-color .15s ease}
+label.check input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent);flex:none;cursor:pointer}
+label.check span{flex:1}
+label.check.checked{background:var(--soft);border-color:var(--accent)}
+label.check.checked span{text-decoration:line-through;color:var(--muted)}
+.progress-line{font-size:12px;color:var(--muted);margin:-6px 0 14px}
 .source{font-size:13px;color:var(--muted);margin-top:10px}
 .source a{text-decoration:underline}
 figure{margin:0}
@@ -167,7 +186,8 @@ a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-off
 @media print{
   nav,.hero-photo,.to-top,.flagline,.trip-map{display:none}
   .hero{background:#fff;color:#000;padding:20px 0}
-  .kicker,.hero p{color:#333}
+  .kicker,.hero p,.hero .crew-line,.namaste,.countdown .cd-num,.countdown .cd-label{color:#333}
+  .countdown{border-color:#ccc;background:none}
   section{padding:22px 0}
   .day,.card,.member,.check,table{box-shadow:none}
 }
@@ -188,9 +208,11 @@ function imgFallback(el){
     <div class="kicker">Group Trip • 18–27 October 2026</div>
     <p class="namaste">नमस्ते — welcome to the journey</p>
     <h1>This Time Nepal</h1>
-    <p>A 7-day Nepal journey built around two things: Himalayan scenery and places connected with Ramayana, Buddhism, Shiva and Shakti traditions.</p>
+    <p>Five friends, one long-overdue reunion — and the first time any of us are crossing a border together. Ten days chasing Himalayan sunrises and the places that hold Ramayana, Buddhism, Shiva and Shakti between them: the trip we kept promising each other we'd finally take.</p>
+    <p class="crew-line">Debasis · Laxminarayan · Satyabrata · Mrutyunjit · Debiprasad</p>
+    <div class="countdown" id="countdown" aria-live="polite"></div>
     <div class="meta">
-      <span class="pill">5 travellers</span>
+      <span class="pill">5 friends, together again</span>
       <span class="pill">Public transport preferred</span>
       <span class="pill">India → Raxaul → Nepal</span>
       <span class="pill">Scenic + Mythological</span>
@@ -209,6 +231,8 @@ function imgFallback(el){
     <a href="#members">Members</a>
     <a href="#itinerary">Itinerary</a>
     <a href="#transport">Transport</a>
+    <a href="#budget">Budget</a>
+    <a href="#packing">Packing</a>
     <a href="#documents">Immigration</a>
     <a href="#todo">To-do</a>
     <a href="#sources">Sources</a>
@@ -552,6 +576,69 @@ function imgFallback(el){
   </div>
 </section>
 
+<section id="budget">
+  <div class="container">
+    <h2>Approx. budget, per person</h2>
+    <p class="lead">Rough planning-stage numbers only — not a quote. Based on typical fares and rates as of August 2026. Re-check everything before you actually book, and swap in real prices once paid.</p>
+    <div class="highlight warn">
+      <strong>These are estimates, not prices.</strong> Train class, hotel choice and season all move these numbers. Treat every row as "approx" until someone in the group has actually paid it.
+    </div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Item</th><th>Approx cost</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Bhubaneswar → Kolkata (train)</td><td>Already booked</td><td>Use the real fare once known.</td></tr>
+        <tr><td>Kolkata → Darbhanga (overnight train)</td><td>≈ ₹400–900</td><td>Sleeper/3AC class.</td></tr>
+        <tr><td>Darbhanga → Raxaul (train/bus)</td><td>≈ ₹100–250</td><td></td></tr>
+        <tr><td>Nepal internal transport</td><td>≈ ₹3,000–5,500</td><td>Birgunj → Janakpur → Dhanushadham → Lumbini → Pokhara → Manakamana → Kathmandu → Raxaul, mixing local bus with shared vehicle for the harder legs.</td></tr>
+        <tr><td>Manakamana Cable Car (round trip)</td><td>≈ NPR 1,070 (~₹670)</td><td>Indian-citizen rate — carry passport/voter ID or you may be charged the foreigner rate.</td></tr>
+        <tr><td>Return: Raxaul → Darbhanga → Kolkata → Bhubaneswar</td><td>≈ ₹800–1,600</td><td>Train, subject to actual booking.</td></tr>
+        <tr><td>Hotels, 6 nights (shared rooms)</td><td>≈ ₹5,000–9,000</td><td>Raxaul, Janakpur, Lumbini, Pokhara ×2, Kathmandu.</td></tr>
+        <tr><td>Meals, 10 days</td><td>≈ ₹5,000–8,000</td><td>Budget to modest local eating.</td></tr>
+        <tr><td>Nepal SIM + data (NTC/Ncell)</td><td>≈ NPR 300–600 (~₹190–375)</td><td>Buy at the airport/border counter — takes 5–10 minutes with your passport.</td></tr>
+        <tr><td>Temple/monastery entry &amp; donations</td><td>≈ ₹500–1,000</td><td>Janaki Mandir, Lumbini zone, Pashupatinath, Guhyeshwari.</td></tr>
+        <tr class="total"><td>Approx. total per person</td><td>≈ ₹16,000–27,000</td><td>Excludes paragliding, shopping and any private-vehicle upgrades.</td></tr>
+        <tr class="optional"><td>Optional: Paragliding (Sarangkot/Pokhara)</td><td>≈ ₹6,000–8,000</td><td>Only for interested members — confirm before adding to the shared budget.</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="source">For 5 people, the approx. total above works out to roughly ₹80,000–1,35,000 for the group, excluding paragliding. Update this table with real figures as bookings are confirmed.</p>
+  </div>
+</section>
+
+<section id="packing">
+  <div class="container">
+    <h2>What to pack</h2>
+    <p class="lead">October means clear skies but cold mornings — Sarangkot at sunrise and Pokhara evenings both get chilly. Tap an item as you pack it; your checks are saved on this device.</p>
+    <p class="progress-line" id="packProgress"></p>
+    <h3>Clothing</h3>
+    <div class="checks" id="packClothing">
+      <label class="check"><input type="checkbox" data-store="pack-jacket"><span>Light jacket or fleece for Sarangkot sunrise and evenings</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-daywear"><span>2–3 breathable daywear sets</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-shoes"><span>Comfortable, already broken-in walking shoes</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-modest"><span>Modest clothing for temples — covered shoulders and knees</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-rain"><span>Light rain layer, just in case</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-socks"><span>Extra socks and a warm cap for early mornings</span></label>
+    </div>
+    <h3 style="margin-top:26px">Essentials</h3>
+    <div class="checks" id="packEssentials">
+      <label class="check"><input type="checkbox" data-store="pack-powerbank"><span>Power bank + charging cables</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-torch"><span>Torch or a reliable phone flashlight</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-sun"><span>Sunscreen and sunglasses</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-meds"><span>Personal medication + basic first-aid (ORS, motion sickness, pain relief)</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-bottle"><span>Reusable water bottle</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-wipes"><span>Wet wipes and hand sanitiser</span></label>
+    </div>
+    <h3 style="margin-top:26px">Nepal-specific</h3>
+    <div class="checks" id="packNepal">
+      <label class="check"><input type="checkbox" data-store="pack-cash-small"><span>Indian currency in ₹100 notes and smaller (see currency note below)</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-npr"><span>Some Nepali rupees exchanged in advance if possible</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-offline-maps"><span>Offline maps downloaded</span></label>
+      <label class="check"><input type="checkbox" data-store="pack-bookings"><span>Hotel bookings saved offline (screenshot or printout)</span></label>
+    </div>
+  </div>
+</section>
+
 <section id="documents">
   <div class="container">
     <h2>Immigration & border requirements</h2>
@@ -568,20 +655,40 @@ function imgFallback(el){
     </div>
 
     <h3 style="margin-top:30px">Carry for every traveller</h3>
-    <div class="checks">
-      <div class="check">Original passport or voter ID</div>
-      <div class="check">2 photocopies of the ID</div>
-      <div class="check">Digital scan stored offline</div>
-      <div class="check">2 passport-size photographs</div>
-      <div class="check">Hotel booking confirmations</div>
-      <div class="check">Return/onward transport details</div>
-      <div class="check">Travel insurance details</div>
-      <div class="check">Emergency contact information</div>
+    <p class="progress-line" id="docProgress"></p>
+    <div class="checks" id="docChecks">
+      <label class="check"><input type="checkbox" data-store="doc-id"><span>Original passport or voter ID</span></label>
+      <label class="check"><input type="checkbox" data-store="doc-photocopy"><span>2 photocopies of the ID</span></label>
+      <label class="check"><input type="checkbox" data-store="doc-scan"><span>Digital scan stored offline</span></label>
+      <label class="check"><input type="checkbox" data-store="doc-photo"><span>2 passport-size photographs</span></label>
+      <label class="check"><input type="checkbox" data-store="doc-hotel"><span>Hotel booking confirmations</span></label>
+      <label class="check"><input type="checkbox" data-store="doc-transport"><span>Return/onward transport details</span></label>
+      <label class="check"><input type="checkbox" data-store="doc-insurance"><span>Travel insurance details</span></label>
+      <label class="check"><input type="checkbox" data-store="doc-emergency"><span>Emergency contact information</span></label>
     </div>
 
     <div class="highlight warn">
       <strong>Border rule:</strong> Keep original IDs in your day bag, not inside checked/main luggage. At Raxaul/Birgunj, follow the immigration and customs instructions at the crossing. Do not assume that an app screenshot or a non-approved ID is enough.
     </div>
+
+    <h3 style="margin-top:30px">Currency &amp; emergency contacts</h3>
+    <div class="highlight">
+      <strong>Indian currency rules in Nepal:</strong> ₹2,000 notes are not accepted at all. ₹500 and ₹200 notes issued after November 2016 are allowed only up to a limited total per person (₹25,000, as of the most recent rule change) — this has changed more than once, so re-check before you cross. Simplest approach: carry mostly ₹100 notes and smaller, and change the rest to Nepali rupees.
+    </div>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Contact</th><th>Number</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>Nepal Police</td><td>100</td><td></td></tr>
+        <tr><td>Ambulance</td><td>102</td><td></td></tr>
+        <tr><td>Fire</td><td>101</td><td></td></tr>
+        <tr><td>Tourist Police</td><td>1144</td><td>Trained to assist visitors — theft, harassment, general help.</td></tr>
+        <tr><td>Embassy of India, Kathmandu — 24/7 emergency</td><td>+977-9851316807</td><td>Verified from <a href="https://www.indembkathmandu.gov.in/contacts" target="_blank">indembkathmandu.gov.in</a></td></tr>
+        <tr><td>Embassy of India, Kathmandu — general/consular</td><td>+977-1-4423702</td><td>Mon–Fri, 9:00–17:30</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="source">Save these numbers offline (screenshot or a notes app) before you lose signal — don't rely on this page loading at the border.</p>
   </div>
 </section>
 
@@ -589,27 +696,28 @@ function imgFallback(el){
   <div class="container">
     <h2>Group to-do before booking</h2>
     <p class="lead">Use this as the review checklist for the five-person group.</p>
-    <div class="checks">
-      <div class="check">☐ Confirm all 5 travellers' names exactly as on ID</div>
-      <div class="check">☐ Confirm passport/voter ID for each person</div>
+    <p class="progress-line" id="todoProgress"></p>
+    <div class="checks" id="todoChecks">
+      <label class="check"><input type="checkbox" data-store="todo-names"><span>Confirm all 5 travellers' names exactly as on ID</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-id"><span>Confirm passport/voter ID for each person</span></label>
       <div class="check">✓ Bhubaneswar → Kolkata train <strong>BOOKED</strong></div>
-      <div class="check">☐ Book Kolkata → Darbhanga overnight train</div>
-      <div class="check">☐ Check Darbhanga → Raxaul train/bus on 19 Oct</div>
-      <div class="check">☐ Book Raxaul hotel for 19 Oct</div>
-      <div class="check">☐ Book Janakpur hotel</div>
-      <div class="check">☐ Book Lumbini hotel</div>
-      <div class="check">☐ Book Pokhara hotel near Lakeside</div>
-      <div class="check">☐ Book Kathmandu hotel</div>
-      <div class="check">☐ Compare Janakpur → Lumbini bus vs shared vehicle</div>
-      <div class="check">☐ Reserve Lumbini → Pokhara tourist bus</div>
-      <div class="check">☐ Reserve Pokhara → Kathmandu tourist bus</div>
-      <div class="check">☐ Check Manakamana Cable Car operating details</div>
-      <div class="check">☐ Arrange Nepal SIM/roaming/data</div>
-      <div class="check">☐ Carry some Nepalese rupees</div>
-      <div class="check">☐ Download offline maps</div>
-      <div class="check">☐ Get travel insurance</div>
-      <div class="check">☐ Confirm paragliding interest and budget</div>
-      <div class="check">☐ Build buffer into the 26 Oct return journey</div>
+      <label class="check"><input type="checkbox" data-store="todo-book-kol-darb"><span>Book Kolkata → Darbhanga overnight train</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-check-darb-rax"><span>Check Darbhanga → Raxaul train/bus on 19 Oct</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-hotel-raxaul"><span>Book Raxaul hotel for 19 Oct</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-hotel-janakpur"><span>Book Janakpur hotel</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-hotel-lumbini"><span>Book Lumbini hotel</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-hotel-pokhara"><span>Book Pokhara hotel near Lakeside</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-hotel-ktm"><span>Book Kathmandu hotel</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-compare-jan-lum"><span>Compare Janakpur → Lumbini bus vs shared vehicle</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-bus-lum-pkr"><span>Reserve Lumbini → Pokhara tourist bus</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-bus-pkr-ktm"><span>Reserve Pokhara → Kathmandu tourist bus</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-manakamana"><span>Check Manakamana Cable Car operating details</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-sim"><span>Arrange Nepal SIM/roaming/data</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-npr-cash"><span>Carry some Nepalese rupees</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-offline-maps"><span>Download offline maps</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-insurance"><span>Get travel insurance</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-paragliding"><span>Confirm paragliding interest and budget</span></label>
+      <label class="check"><input type="checkbox" data-store="todo-buffer"><span>Build buffer into the 26 Oct return journey</span></label>
     </div>
 
     <div class="highlight">
@@ -691,6 +799,76 @@ function imgFallback(el){
       var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
     });
+  }
+
+  function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
+  function safeSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+
+  function wireChecklist(containerId, progressId, noun){
+    var container = document.getElementById(containerId);
+    if (!container) return;
+    var boxes = Array.prototype.slice.call(container.querySelectorAll('input[type="checkbox"]'));
+    var progress = progressId ? document.getElementById(progressId) : null;
+    function updateProgress(){
+      if (!progress) return;
+      var done = boxes.filter(function(b){ return b.checked; }).length;
+      progress.textContent = boxes.length ? (done + ' of ' + boxes.length + ' ' + noun) : '';
+    }
+    boxes.forEach(function(cb){
+      var key = 'ttn-' + cb.dataset.store;
+      if (safeGet(key) === '1') {
+        cb.checked = true;
+        cb.closest('label.check').classList.add('checked');
+      }
+      cb.addEventListener('change', function(){
+        safeSet(key, cb.checked ? '1' : '0');
+        cb.closest('label.check').classList.toggle('checked', cb.checked);
+        updateProgress();
+      });
+    });
+    updateProgress();
+  }
+  wireChecklist('docChecks', 'docProgress', 'carried');
+  wireChecklist('todoChecks', 'todoProgress', 'done');
+  wireChecklist('packClothing', null, '');
+  wireChecklist('packEssentials', null, '');
+  wireChecklist('packNepal', null, '');
+  (function(){
+    var groups = ['packClothing','packEssentials','packNepal'];
+    var allBoxes = [];
+    groups.forEach(function(id){
+      var el = document.getElementById(id);
+      if (el) allBoxes = allBoxes.concat(Array.prototype.slice.call(el.querySelectorAll('input[type="checkbox"]')));
+    });
+    var packProgress = document.getElementById('packProgress');
+    function updatePack(){
+      if (!packProgress) return;
+      var done = allBoxes.filter(function(b){ return b.checked; }).length;
+      packProgress.textContent = allBoxes.length ? (done + ' of ' + allBoxes.length + ' packed') : '';
+    }
+    allBoxes.forEach(function(cb){ cb.addEventListener('change', updatePack); });
+    updatePack();
+  })();
+
+  var cdEl = document.getElementById('countdown');
+  if (cdEl) {
+    var tripStart = new Date(2026, 9, 18);
+    var tripEnd = new Date(2026, 9, 27);
+    var now = new Date();
+    var msPerDay = 86400000;
+    var startMid = new Date(tripStart.getFullYear(), tripStart.getMonth(), tripStart.getDate());
+    var endMid = new Date(tripEnd.getFullYear(), tripEnd.getMonth(), tripEnd.getDate());
+    var nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    var toStart = Math.round((startMid - nowMid) / msPerDay);
+    var toEnd = Math.round((endMid - nowMid) / msPerDay);
+    if (toStart > 0) {
+      cdEl.innerHTML = '<span class="cd-num">' + toStart + '</span><span class="cd-label">day' + (toStart === 1 ? '' : 's') + ' until we leave for Kolkata</span>';
+    } else if (toStart <= 0 && toEnd >= 0) {
+      var dayNum = Math.round((nowMid - startMid) / msPerDay) + 1;
+      cdEl.innerHTML = '<span class="cd-num">Day ' + dayNum + '</span><span class="cd-label">of 10 — enjoy every bit of it</span>';
+    } else {
+      cdEl.innerHTML = '<span class="cd-num">✓</span><span class="cd-label">The trip is done — until next time</span>';
+    }
   }
 
   var mapEl = document.getElementById('tripMap');
