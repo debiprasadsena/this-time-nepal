@@ -74,15 +74,14 @@ nav{position:sticky;top:0;z-index:10;background:var(--bg);background:color-mix(i
 nav a{text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap;color:var(--muted);background:var(--surface2);border:1px solid var(--line);padding:10px 15px;min-height:40px;border-radius:999px;transition:color .15s ease,background .15s ease,border-color .15s ease;display:inline-flex;align-items:center;flex:none}
 nav a.active{color:#fff;background:var(--accent);border-color:var(--accent)}
 nav a:hover{border-color:var(--accent)}
-.who-bar{display:none;background:var(--surface2);border-bottom:1px solid var(--line)}
-.who-bar.show{display:block}
-.who-bar-inner{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:9px 24px;font-size:12.5px;color:var(--muted)}
-.who-bar input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:160px;max-width:45vw;transition:border-color .2s ease,box-shadow .2s ease}
-.who-bar input.nudge{border-color:var(--today);box-shadow:0 0 0 3px color-mix(in srgb, var(--today) 25%, transparent);animation:nudge-shake .4s ease}
+.who-inline{display:none;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:12.5px;color:var(--muted)}
+.who-inline.show{display:flex}
+.who-inline input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:160px;max-width:50vw;transition:border-color .2s ease,box-shadow .2s ease}
+.who-inline input.nudge{border-color:var(--today);box-shadow:0 0 0 3px color-mix(in srgb, var(--today) 25%, transparent);animation:nudge-shake .4s ease}
 @keyframes nudge-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
-@media(prefers-reduced-motion:reduce){.who-bar input.nudge{animation:none}}
-.who-bar-note{margin-left:auto;font-size:11.5px;opacity:.8}
-@media(max-width:520px){.who-bar-note{display:none}}
+@media(prefers-reduced-motion:reduce){.who-inline input.nudge{animation:none}}
+.who-inline-note{opacity:.8}
+@media(max-width:520px){.who-inline-note{display:none}}
 section{padding:58px 0;scroll-margin-top:76px}
 h2{font-family:var(--font-display);font-weight:400;font-size:clamp(24px,4.6vw,32px);line-height:1.15;margin:0 0 10px;letter-spacing:0;text-wrap:balance}
 h3{font-family:var(--font-display);font-weight:400;font-size:22px;margin:0 0 8px}
@@ -262,20 +261,13 @@ function imgFallback(el){
   </div>
 </nav>
 
-<div class="who-bar">
-  <div class="container who-bar-inner">
-    <label for="whoInput">Checking items as</label>
-    <input type="text" id="whoInput" list="whoNames" placeholder="Type your name…" autocomplete="off">
-    <datalist id="whoNames">
-      <option value="Debasis"></option>
-      <option value="Laxminarayan"></option>
-      <option value="Satyabrata"></option>
-      <option value="Mrutyunjit"></option>
-      <option value="Debiprasad"></option>
-    </datalist>
-    <span class="who-bar-note">Checklists sync live for everyone</span>
-  </div>
-</div>
+<datalist id="whoNames">
+  <option value="Debasis"></option>
+  <option value="Laxminarayan"></option>
+  <option value="Satyabrata"></option>
+  <option value="Mrutyunjit"></option>
+  <option value="Debiprasad"></option>
+</datalist>
 
 <main>
 <section id="overview">
@@ -647,7 +639,12 @@ function imgFallback(el){
 <section id="packing">
   <div class="container">
     <h2>What to pack</h2>
-    <p class="lead">October means clear skies but cold mornings — Sarangkot at sunrise and Pokhara evenings both get chilly. Tap an item as you pack it; your checks are saved on this device.</p>
+    <p class="lead">October means clear skies but cold mornings — Sarangkot at sunrise and Pokhara evenings both get chilly. Tap an item as you pack it.</p>
+    <div class="who-inline">
+      <label for="whoInput-pack">Checking items as</label>
+      <input type="text" id="whoInput-pack" class="who-input" list="whoNames" placeholder="Type your name…" autocomplete="off">
+      <span class="who-inline-note">— syncs live for everyone</span>
+    </div>
     <p class="progress-line" id="packProgress"></p>
     <h3>Clothing</h3>
     <div class="checks" id="packClothing">
@@ -693,6 +690,10 @@ function imgFallback(el){
     </div>
 
     <h3 style="margin-top:30px">Carry for every traveller</h3>
+    <div class="who-inline">
+      <label for="whoInput-doc">Checking items as</label>
+      <input type="text" id="whoInput-doc" class="who-input" list="whoNames" placeholder="Type your name…" autocomplete="off">
+    </div>
     <p class="progress-line" id="docProgress"></p>
     <div class="checks" id="docChecks">
       <label class="check"><input type="checkbox" data-store="doc-id"><span>Original passport or voter ID</span></label>
@@ -734,6 +735,10 @@ function imgFallback(el){
   <div class="container">
     <h2>Group to-do before booking</h2>
     <p class="lead">Use this as the review checklist for the five-person group.</p>
+    <div class="who-inline">
+      <label for="whoInput-todo">Checking items as</label>
+      <input type="text" id="whoInput-todo" class="who-input" list="whoNames" placeholder="Type your name…" autocomplete="off">
+    </div>
     <p class="progress-line" id="todoProgress"></p>
     <div class="checks" id="todoChecks">
       <label class="check"><input type="checkbox" data-store="todo-names"><span>Confirm all 5 travellers' names exactly as on ID</span></label>
@@ -893,7 +898,7 @@ function imgFallback(el){
         safeSet(key, cb.checked ? '1' : '0');
         cb.closest('label.check').classList.toggle('checked', cb.checked);
         updateProgress();
-        if (cb.checked && !currentWho()) nudgeForName();
+        if (cb.checked && !currentWho()) nudgeForName(cb);
         onLocalToggle(cb.dataset.store, cb.checked);
       });
     });
@@ -923,19 +928,29 @@ function imgFallback(el){
     progressUpdaters.push(updatePack);
   })();
 
-  var whoSelect = document.getElementById('whoInput');
-  if (whoSelect) {
-    var savedWho = safeGet('ttn-who');
-    if (savedWho) whoSelect.value = savedWho;
-    whoSelect.addEventListener('input', function(){ safeSet('ttn-who', whoSelect.value.trim()); });
-  }
-  function currentWho(){ return (whoSelect && whoSelect.value.trim()) || safeGet('ttn-who') || ''; }
-  function nudgeForName(){
-    if (!whoSelect) return;
-    whoSelect.classList.add('nudge');
-    whoSelect.placeholder = 'Type your name first!';
-    whoSelect.focus();
-    setTimeout(function(){ whoSelect.classList.remove('nudge'); }, 1600);
+  var whoInputs = Array.prototype.slice.call(document.querySelectorAll('.who-input'));
+  var savedWho = safeGet('ttn-who');
+  whoInputs.forEach(function(inp){
+    if (savedWho) inp.value = savedWho;
+    inp.addEventListener('input', function(){
+      var v = inp.value.trim();
+      safeSet('ttn-who', v);
+      whoInputs.forEach(function(other){ if (other !== inp) other.value = inp.value; });
+    });
+  });
+  function currentWho(){ return safeGet('ttn-who') || ''; }
+  function nudgeForName(nearEl){
+    var target = null;
+    var section = nearEl && nearEl.closest('section');
+    if (section) target = section.querySelector('.who-input');
+    if (!target) target = whoInputs[0];
+    if (!target) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    target.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+    target.classList.add('nudge');
+    target.placeholder = 'Type your name first!';
+    target.focus();
+    setTimeout(function(){ target.classList.remove('nudge'); }, 1600);
   }
 
   function applyRemoteItems(items){
@@ -977,8 +992,7 @@ function imgFallback(el){
   }
 
   if (SHEET_SYNC_URL) {
-    var whoBar = document.querySelector('.who-bar');
-    if (whoBar) whoBar.classList.add('show');
+    document.querySelectorAll('.who-inline').forEach(function(el){ el.classList.add('show'); });
     fetchRemoteState();
     setInterval(fetchRemoteState, 25000);
   }
