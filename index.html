@@ -77,7 +77,10 @@ nav a:hover{border-color:var(--accent)}
 .who-bar{display:none;background:var(--surface2);border-bottom:1px solid var(--line)}
 .who-bar.show{display:block}
 .who-bar-inner{display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:9px 24px;font-size:12.5px;color:var(--muted)}
-.who-bar input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:160px;max-width:45vw}
+.who-bar input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:160px;max-width:45vw;transition:border-color .2s ease,box-shadow .2s ease}
+.who-bar input.nudge{border-color:var(--today);box-shadow:0 0 0 3px color-mix(in srgb, var(--today) 25%, transparent);animation:nudge-shake .4s ease}
+@keyframes nudge-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@media(prefers-reduced-motion:reduce){.who-bar input.nudge{animation:none}}
 .who-bar-note{margin-left:auto;font-size:11.5px;opacity:.8}
 @media(max-width:520px){.who-bar-note{display:none}}
 section{padding:58px 0;scroll-margin-top:76px}
@@ -890,6 +893,7 @@ function imgFallback(el){
         safeSet(key, cb.checked ? '1' : '0');
         cb.closest('label.check').classList.toggle('checked', cb.checked);
         updateProgress();
+        if (cb.checked && !currentWho()) nudgeForName();
         onLocalToggle(cb.dataset.store, cb.checked);
       });
     });
@@ -926,6 +930,13 @@ function imgFallback(el){
     whoSelect.addEventListener('input', function(){ safeSet('ttn-who', whoSelect.value.trim()); });
   }
   function currentWho(){ return (whoSelect && whoSelect.value.trim()) || safeGet('ttn-who') || ''; }
+  function nudgeForName(){
+    if (!whoSelect) return;
+    whoSelect.classList.add('nudge');
+    whoSelect.placeholder = 'Type your name first!';
+    whoSelect.focus();
+    setTimeout(function(){ whoSelect.classList.remove('nudge'); }, 1600);
+  }
 
   function applyRemoteItems(items){
     if (!items || !items.forEach) return;
