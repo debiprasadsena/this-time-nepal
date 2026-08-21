@@ -1,0 +1,44 @@
+item_id	text	checked	checked_by	checked_at
+pack-jacket	Light jacket or fleece for Sarangkot sunrise and evenings	FALSE		
+pack-daywear	2–3 breathable daywear sets	FALSE		
+pack-shoes	Comfortable, already broken-in walking shoes	FALSE		
+pack-modest	Modest clothing for temples — covered shoulders and knees	FALSE		
+pack-rain	Light rain layer, just in case	FALSE		
+pack-socks	Extra socks and a warm cap for early mornings	FALSE		
+pack-powerbank	Power bank + charging cables	FALSE		
+pack-torch	Torch or a reliable phone flashlight	FALSE		
+pack-sun	Sunscreen and sunglasses	FALSE		
+pack-meds	Personal medication + basic first-aid (ORS, motion sickness, pain relief)	FALSE		
+pack-bottle	Reusable water bottle	FALSE		
+pack-wipes	Wet wipes and hand sanitiser	FALSE		
+pack-cash-small	Indian currency in ₹100 notes and smaller (see currency note below)	FALSE		
+pack-npr	Some Nepali rupees exchanged in advance if possible	FALSE		
+pack-offline-maps	Offline maps downloaded	FALSE		
+pack-bookings	Hotel bookings saved offline (screenshot or printout)	FALSE		
+doc-id	Original passport or voter ID	FALSE		
+doc-photocopy	2 photocopies of the ID	FALSE		
+doc-scan	Digital scan stored offline	FALSE		
+doc-photo	2 passport-size photographs	FALSE		
+doc-hotel	Hotel booking confirmations	FALSE		
+doc-transport	Return/onward transport details	FALSE		
+doc-insurance	Travel insurance details	FALSE		
+doc-emergency	Emergency contact information	FALSE		
+todo-names	Confirm all 5 travellers' names exactly as on ID	FALSE		
+todo-id	Confirm passport/voter ID for each person	FALSE		
+todo-book-kol-darb	Book Kolkata → Darbhanga overnight train	FALSE		
+todo-check-darb-rax	Check Darbhanga → Raxaul train/bus on 19 Oct	FALSE		
+todo-hotel-raxaul	Book Raxaul hotel for 19 Oct	FALSE		
+todo-hotel-janakpur	Book Janakpur hotel	FALSE		
+todo-hotel-lumbini	Book Lumbini hotel	FALSE		
+todo-hotel-pokhara	Book Pokhara hotel near Lakeside	FALSE		
+todo-hotel-ktm	Book Kathmandu hotel	FALSE		
+todo-compare-jan-lum	Compare Janakpur → Lumbini bus vs shared vehicle	FALSE		
+todo-bus-lum-pkr	Reserve Lumbini → Pokhara tourist bus	FALSE		
+todo-bus-pkr-ktm	Reserve Pokhara → Kathmandu tourist bus	FALSE		
+todo-manakamana	Check Manakamana Cable Car operating details	FALSE		
+todo-sim	Arrange Nepal SIM/roaming/data	FALSE		
+todo-npr-cash	Carry some Nepalese rupees	FALSE		
+todo-offline-maps	Download offline maps	FALSE		
+todo-insurance	Get travel insurance	FALSE		
+todo-paragliding	Confirm paragliding interest and budget	FALSE		
+todo-buffer	Build buffer into the 26 Oct return journey	FALSE		
