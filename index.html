@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,118 +18,82 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
 <style>
 :root{
-  --bg:#f5f3ee; --card:#fff; --surface2:#f7f6f2; --ink:#171717; --muted:#6b6b67;
-  --line:#dedbd3; --accent:#1d5c4a; --accent2:#d98c45; --soft:#e8eee9; --warn:#fff4e8;
-  --shadow:0 1px 2px rgba(23,23,23,.04),0 8px 24px -12px rgba(23,23,23,.14);
+  --bg:#f5f3ee; --card:#fff; --surface2:#f0ede6; --ink:#171717; --muted:#6b6b67;
+  --line:#e0dbd1; --accent:#1d5c4a; --accent2:#d98c45; --soft:#e8eee9; --warn:#fff4e8;
+  --shadow:0 1px 2px rgba(23,23,23,.04),0 6px 22px -10px rgba(23,23,23,.13);
   --band:#171717; --today:#c8433a;
   --flag-blue:#2d5f8a; --flag-white:#f2ece0; --flag-red:#bd3b34;
   --font-display:'Yatra One',Georgia,'Noto Serif Devanagari',serif;
+  --stay:#3d6898;
+  --spine-color:#1d5c4a;
 }
-@media (prefers-color-scheme:dark){
+@media(prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
-    --bg:#15181a; --card:#1e2320; --surface2:#262b27; --ink:#f0ede4; --muted:#a6a29b;
-    --line:#333831; --accent:#68bd9a; --accent2:#eaa96a; --soft:#1b2621; --warn:#2c2318;
-    --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
-    --today:#e4685f;
+    --bg:#111314; --card:#1c2024; --surface2:#232830; --ink:#edeae3; --muted:#9a9692;
+    --line:#2a2f38; --accent:#68bd9a; --accent2:#eaa96a; --soft:#192028; --warn:#261f14;
+    --shadow:0 1px 3px rgba(0,0,0,.4),0 6px 24px -10px rgba(0,0,0,.6);
+    --today:#e4685f; --stay:#6399cc; --spine-color:#68bd9a;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#15181a; --card:#1e2320; --surface2:#262b27; --ink:#f0ede4; --muted:#a6a29b;
-  --line:#333831; --accent:#68bd9a; --accent2:#eaa96a; --soft:#1b2621; --warn:#2c2318;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 8px 24px -12px rgba(0,0,0,.5);
-  --today:#e4685f;
+  --bg:#111314; --card:#1c2024; --surface2:#232830; --ink:#edeae3; --muted:#9a9692;
+  --line:#2a2f38; --accent:#68bd9a; --accent2:#eaa96a; --soft:#192028; --warn:#261f14;
+  --shadow:0 1px 3px rgba(0,0,0,.4),0 6px 24px -10px rgba(0,0,0,.6);
+  --today:#e4685f; --stay:#6399cc; --spine-color:#68bd9a;
 }
+
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:76px;-webkit-text-size-adjust:100%}
-body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;overscroll-behavior-y:none;width:100%}
+html{scroll-behavior:smooth;scroll-padding-top:60px;-webkit-text-size-adjust:100%}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;overscroll-behavior-y:none}
 a{color:inherit}
 img{max-width:100%}
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-.flagline{height:7px;background-image:repeating-linear-gradient(to right,var(--flag-blue) 0 10px,var(--flag-white) 10px 20px,var(--flag-red) 20px 30px,var(--accent) 30px 40px,var(--accent2) 40px 50px)}
-.flagline--thin{height:4px;opacity:.8}
-.container{max-width:1180px;margin:auto;padding:0 24px;padding-left:max(24px,env(safe-area-inset-left));padding-right:max(24px,env(safe-area-inset-right))}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* ── Flagline ── */
+.flagline{height:8px;background-image:repeating-linear-gradient(to right,var(--flag-blue) 0 12px,var(--flag-white) 12px 24px,var(--flag-red) 24px 36px,var(--accent) 36px 48px,var(--accent2) 48px 60px)}
+
+/* ── Container ── */
+.container{max-width:1100px;margin:auto;padding:0 28px;padding-left:max(28px,env(safe-area-inset-left));padding-right:max(28px,env(safe-area-inset-right))}
+
+/* ── Hero ── */
 .hero{background:var(--band);color:#fff;padding:72px 0 64px;position:relative;overflow:hidden}
 .hero:before{content:"";position:absolute;left:0;right:0;bottom:0;height:130px;opacity:.5;pointer-events:none;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 160' preserveAspectRatio='none'%3E%3Cpath d='M0 160 L0 100 L90 40 L150 90 L225 15 L245 40 L265 15 L330 95 L410 55 L480 120 L560 60 L650 110 L740 50 L820 100 L900 45 L980 105 L1060 60 L1150 100 L1200 70 L1200 160 Z' fill='%232a2f2b'/%3E%3C/svg%3E") bottom/cover no-repeat}
 .hero:after{content:"";position:absolute;width:460px;height:460px;border:1px solid #555;border-radius:50%;right:-150px;top:-170px;opacity:.35}
 .hero .container{position:relative;z-index:1}
 .hero-logo{width:60px;height:60px;display:block;margin-bottom:14px}
-.footer-logo{width:38px;height:38px;display:block;margin-bottom:12px}
 .kicker{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#b7c8bf;font-weight:700}
 .namaste{font-family:var(--font-display);font-size:15px;letter-spacing:.02em;color:#e8c07a;margin:10px 0 0}
 h1{font-family:var(--font-display);font-weight:400;font-size:clamp(40px,8.5vw,84px);line-height:1;margin:14px 0 18px;letter-spacing:-.01em;text-wrap:balance}
 .hero p{max-width:660px;font-size:clamp(16px,3.6vw,19px);color:#d5d5d2;margin:0}
+.hero .tagline{font-family:var(--font-display);font-size:clamp(20px,4.5vw,30px);color:#fff;font-weight:400;letter-spacing:.01em;margin:10px 0 18px;line-height:1.2}
 .hero .crew-line{font-family:var(--font-display);font-weight:400;font-size:clamp(14px,2.6vw,17px);letter-spacing:.03em;color:#e8c07a;margin:16px 0 0;max-width:660px}
-.countdown{display:inline-flex;align-items:baseline;gap:12px;margin-top:24px;padding:14px 20px;border:1px solid #3a3a37;border-radius:16px;background:rgba(255,255,255,.05)}
-.countdown .cd-num{font-family:var(--font-display);font-weight:400;font-size:32px;line-height:1;color:#e8c07a;white-space:nowrap}
+.countdown{display:inline-flex;align-items:center;gap:0;margin-top:24px;padding:14px 22px;border:1px solid #3a3a37;border-radius:16px;background:rgba(255,255,255,.05)}
+.cd-seg{display:flex;flex-direction:column;align-items:center;min-width:52px}
+.cd-seg .cd-n{font-family:Inter,ui-sans-serif,system-ui,sans-serif;font-weight:800;font-size:34px;line-height:1;color:#e8c07a;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.cd-seg .cd-u{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:#a0a09c;margin-top:4px}
+.cd-colon{font-family:Inter,sans-serif;font-weight:800;font-size:30px;color:#5a5a56;margin:0 2px;padding-bottom:14px;line-height:1}
 .countdown .cd-label{font-size:13px;color:#d5d5d2;letter-spacing:.01em}
-@media(max-width:520px){.countdown{padding:11px 16px;gap:10px}.countdown .cd-num{font-size:26px}.countdown .cd-label{font-size:12.5px}}
 .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
 .pill{border:1px solid #4a4a47;border-radius:999px;padding:9px 13px;font-size:13px;color:#eee;line-height:1.2}
-nav{position:sticky;top:0;z-index:10;background:var(--bg);background:color-mix(in srgb, var(--bg) 94%, transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.navinner{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:10px 14px;max-width:1180px;margin:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain;touch-action:pan-x;
-  mask-image:linear-gradient(to right,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%);
-  -webkit-mask-image:linear-gradient(to right,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%);}
+.hero-photo{width:100%;height:360px;object-fit:cover;border-radius:16px;margin-top:34px;display:block;opacity:.92;background:#2a2f2b}
+@media(max-width:520px){.countdown{padding:11px 14px}.cd-seg{min-width:42px}.cd-seg .cd-n{font-size:26px}.cd-colon{font-size:24px;padding-bottom:12px}.countdown .cd-label{font-size:12.5px}.hero{padding:44px 0}.hero-photo{height:220px;margin-top:26px}}
+
+/* ── Nav ── */
+nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb, var(--bg) 94%, transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.navinner{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:10px 16px;max-width:1100px;margin:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;overscroll-behavior-x:contain;mask-image:linear-gradient(to right,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%);-webkit-mask-image:linear-gradient(to right,transparent 0,#000 22px,#000 calc(100% - 22px),transparent 100%)}
 .navinner::-webkit-scrollbar{display:none}
-nav a{text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap;color:var(--muted);background:var(--surface2);border:1px solid var(--line);padding:10px 15px;min-height:40px;border-radius:999px;transition:color .15s ease,background .15s ease,border-color .15s ease;display:inline-flex;align-items:center;flex:none}
+nav a{text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap;color:var(--muted);background:var(--surface2);border:1px solid var(--line);padding:10px 18px;min-height:40px;border-radius:999px;transition:color .15s,background .15s,border-color .15s;display:inline-flex;align-items:center;flex:none}
 nav a.active{color:#fff;background:var(--accent);border-color:var(--accent)}
 nav a:hover{border-color:var(--accent)}
-.who-inline{display:none;align-items:center;gap:8px;flex-wrap:wrap;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:0 0 14px;font-size:12.5px;color:var(--muted)}
-.who-inline.show{display:flex}
-.who-inline input{font:inherit;font-size:12.5px;padding:6px 9px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink);width:160px;max-width:50vw;transition:border-color .2s ease,box-shadow .2s ease}
-.who-inline input.nudge{border-color:var(--today);box-shadow:0 0 0 3px color-mix(in srgb, var(--today) 25%, transparent);animation:nudge-shake .4s ease}
-@keyframes nudge-shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
-@media(prefers-reduced-motion:reduce){.who-inline input.nudge{animation:none}}
-.who-inline-note{opacity:.8}
-@media(max-width:520px){.who-inline-note{display:none}}
-section{padding:58px 0;scroll-margin-top:76px}
-h2{font-family:var(--font-display);font-weight:400;font-size:clamp(24px,4.6vw,32px);line-height:1.15;margin:0 0 10px;letter-spacing:0;text-wrap:balance}
-h3{font-family:var(--font-display);font-weight:400;font-size:22px;margin:0 0 8px}
-.lead{color:var(--muted);max-width:760px;margin:0 0 28px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;box-shadow:var(--shadow)}
-.card .tag{font-size:12px;text-transform:uppercase;letter-spacing:.09em;color:var(--accent);font-weight:800}
-.card p{margin:8px 0 0;color:var(--muted)}
-.members{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
-.member{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;font-weight:700}
-.timeline{display:flex;flex-direction:column;gap:14px}
-.day{display:grid;grid-template-columns:115px 1fr;gap:22px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:22px;scroll-margin-top:76px}
-.date{font-weight:800;font-size:18px}
-.daytitle{font-family:var(--font-display);font-weight:400;font-size:clamp(20px,4.4vw,25px);margin-bottom:12px;text-wrap:balance}
-.route{font-size:15px;color:var(--accent);font-weight:800;margin-bottom:12px}
-.info{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:15px}
-.info div{background:var(--surface2);border-radius:12px;padding:13px}
-.info b{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
-ul{margin:8px 0 0;padding-left:20px}
-.highlight{background:var(--soft);border-left:4px solid var(--accent);padding:17px 18px;border-radius:0 12px 12px 0;margin:18px 0}
-.warn{background:var(--warn);border-left-color:var(--accent2)}
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:16px;overscroll-behavior-x:contain;touch-action:pan-x}
-table{width:100%;min-width:640px;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
-th,td{text-align:left;padding:14px;border-bottom:1px solid var(--line);vertical-align:top}
-th{background:var(--surface2);font-size:12px;text-transform:uppercase;letter-spacing:.06em}
-tr:last-child td{border-bottom:0}
-tr.total td{background:var(--soft);font-weight:800}
-tr.optional td{color:var(--muted);font-style:italic}
-.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.check{background:var(--card);border:1px solid var(--line);padding:13px 15px;border-radius:12px}
-label.check{display:flex;align-items:flex-start;gap:10px;cursor:pointer;user-select:none;transition:background .15s ease,border-color .15s ease}
-label.check input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent);flex:none;cursor:pointer}
-label.check span{flex:1}
-label.check.checked{background:var(--soft);border-color:var(--accent)}
-label.check.checked span{text-decoration:line-through;color:var(--muted)}
-label.check .checked-by{display:block;width:100%;font-size:11px;font-weight:700;color:var(--accent);margin-top:2px}
-label.check .checked-by:empty{display:none}
-.progress-line{font-size:12px;color:var(--muted);margin:-6px 0 14px}
-.source{font-size:13px;color:var(--muted);margin-top:10px}
-.source a{text-decoration:underline}
-figure{margin:0}
-.day-photo{width:100%;height:230px;object-fit:cover;border-radius:14px;margin:0 0 18px;display:block;background:var(--soft)}
-.hero-photo{width:100%;height:360px;object-fit:cover;border-radius:22px;margin-top:34px;display:block;opacity:.92;background:#2a2f2b}
-.photo-caption{font-size:11px;color:var(--muted);margin-top:-10px;margin-bottom:18px}
-footer{background:var(--band);color:#ddd;padding:38px 0;margin-top:30px}
-footer p{color:#aaa;font-size:13px}
-.small{font-size:13px;color:var(--muted)}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
-.trip-map{width:100%;height:440px;border-radius:18px;border:1px solid var(--line);background:var(--surface2)}
+/* ── Sections ── */
+section{padding:72px 0;scroll-margin-top:60px}
+h2{font-family:var(--font-display);font-weight:400;font-size:clamp(26px,5vw,38px);line-height:1.1;margin:0 0 10px;text-wrap:balance}
+.lead{color:var(--muted);max-width:700px;margin:0 0 36px;font-size:15px}
+
+/* ── Map ── */
+.trip-map{width:100%;height:440px;border-radius:14px;border:1px solid var(--line);background:var(--surface2)}
 .map-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:12px;color:var(--muted)}
 .map-legend span{display:inline-flex;align-items:center;gap:7px}
 .map-legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
@@ -141,83 +104,131 @@ footer p{color:#aaa;font-size:13px}
 .leaflet-popup-content{margin:12px 14px;font-family:Inter,sans-serif;font-size:13px;line-height:1.4}
 .leaflet-popup-content b{font-family:var(--font-display);font-weight:400;font-size:15px}
 .leaflet-popup-content a{color:var(--accent);font-weight:700;text-decoration:none}
-.leaflet-container{font-family:Inter,sans-serif;border-radius:18px}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)}}
+.leaflet-container{font-family:Inter,sans-serif;border-radius:14px}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]) .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)}}
 :root[data-theme="dark"] .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.95) contrast(.9)}
 @media(max-width:520px){.trip-map{height:320px}}
 
-.cal-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
-.cal-head{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:center;padding-bottom:6px;font-weight:700}
-.cal-cell{aspect-ratio:1/1;border-radius:10px;padding:6px 4px;display:flex;flex-direction:column;gap:2px;background:var(--surface2)}
-.cal-cell.empty{background:transparent}
-.cal-num{font-size:13px;font-weight:800;line-height:1}
-.cal-label{font-size:10px;line-height:1.2;color:var(--muted);overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
-.cal-cell.trip{background:var(--soft);border:1px solid var(--accent);text-decoration:none;color:inherit}
-.cal-cell.trip .cal-label{color:var(--accent)}
-.cal-cell.trip:hover,.cal-cell.trip:focus-visible{background:var(--accent);color:#fff}
-.cal-cell.trip:hover .cal-num,.cal-cell.trip:hover .cal-label,.cal-cell.trip:focus-visible .cal-num,.cal-cell.trip:focus-visible .cal-label{color:#fff}
-.cal-cell.today{outline:2px solid var(--today);outline-offset:-2px}
-.cal-legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:16px;font-size:12px;color:var(--muted)}
-.cal-legend span{display:inline-flex;align-items:center;gap:6px}
-.cal-legend i{width:11px;height:11px;border-radius:3px;display:inline-block}
-a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* ── Timeline ── */
+.tl-wrap{max-width:760px;margin:0 auto;position:relative}
+.tl-wrap::before{content:'';position:absolute;left:22px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--spine-color) 4%,var(--spine-color) 96%,transparent);opacity:.18;pointer-events:none}
 
-.to-top{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;border:none;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);cursor:pointer;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .25s ease,transform .25s ease;z-index:20}
+.tl-item{display:grid;grid-template-columns:44px 1fr;gap:0 20px;margin-bottom:18px;page-break-inside:avoid}
+
+.tl-dot-col{display:flex;justify-content:center;align-items:flex-start;padding-top:22px}
+.tl-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0;position:relative;z-index:1}
+
+/* Day type — dot colours */
+.tl-item.travel    .tl-dot{background:var(--accent2);box-shadow:0 0 0 3px var(--bg),0 0 0 4.5px var(--accent2)}
+.tl-item.sightsee  .tl-dot{background:var(--accent);box-shadow:0 0 0 3px var(--bg),0 0 0 4.5px var(--accent)}
+.tl-item.mixed     .tl-dot{background:var(--stay);box-shadow:0 0 0 3px var(--bg),0 0 0 4.5px var(--stay)}
+
+/* Card */
+.tl-card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 24px 22px;position:relative;box-shadow:var(--shadow)}
+
+/* Card header */
+.tl-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.tl-date-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+.tl-date{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;font-size:22px;font-weight:800;line-height:1;color:var(--ink);letter-spacing:-.02em}
+.tl-sub{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+
+/* Day badge */
+.day-badge{font-size:9px;font-weight:700;letter-spacing:.10em;text-transform:uppercase;padding:4px 10px;border-radius:3px;flex-shrink:0}
+.tl-item.travel   .day-badge{background:rgba(217,140,69,.12);color:var(--accent2)}
+.tl-item.sightsee .day-badge{background:rgba(29,92,74,.10);color:var(--accent)}
+.tl-item.mixed    .day-badge{background:rgba(61,104,152,.10);color:var(--stay)}
+
+/* Time sections */
+.tl-sections{display:flex;flex-direction:column}
+.tl-section{display:grid;grid-template-columns:96px 1fr;gap:0 14px;align-items:start;padding:10px 0}
+.tl-section+.tl-section{border-top:1px solid var(--line)}
+
+/* Label + slot-tag stacked */
+.tl-label-col{display:flex;flex-direction:column;gap:5px;padding-top:2px}
+.tl-time{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.3}
+.tl-time.hi{color:var(--accent2)}
+
+/* Slot tags */
+.stag{font-size:8.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;padding:2px 7px;border-radius:2px;display:inline-block;line-height:1.5}
+.stag.t{background:rgba(217,140,69,.14);color:var(--accent2)}
+.stag.s{background:rgba(29,92,74,.10);color:var(--accent)}
+.stag.h{background:rgba(61,104,152,.10);color:var(--stay)}
+.stag.l{background:var(--surface2);color:var(--muted)}
+
+/* Items list */
+.tl-items{display:flex;flex-direction:column;gap:3px}
+.tl-li{font-size:13px;color:var(--ink);line-height:1.5}
+.tl-li.b{font-weight:700;letter-spacing:.02em}
+
+/* ── Booking summary bar ── */
+.booking-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow);margin-bottom:36px}
+.bb-item{display:flex;flex-direction:column;align-items:center;text-align:center;padding:20px 12px}
+.bb-item+.bb-item{border-left:1px solid var(--line)}
+.bb-num{font-family:var(--font-display);font-size:44px;line-height:1;margin-bottom:4px}
+.bb-label{font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+.bb-detail{font-size:11px;color:var(--muted);line-height:1.5}
+.bb-item.confirmed .bb-num,.bb-item.confirmed .bb-label{color:var(--accent)}
+.bb-item.pending .bb-num,.bb-item.pending .bb-label{color:var(--accent2)}
+.bb-item.hotel .bb-num,.bb-item.hotel .bb-label{color:var(--stay)}
+@media(max-width:520px){
+  .booking-bar{grid-template-columns:1fr}
+  .bb-item+.bb-item{border-left:none;border-top:1px solid var(--line)}
+}
+
+/* ── Collapsible cards ── */
+.tl-head{cursor:pointer;user-select:none;-webkit-user-select:none}
+.tl-chevron{width:18px;height:18px;flex-shrink:0;transition:transform .22s;color:var(--muted);margin-top:6px;opacity:.6}
+.tl-card.collapsed .tl-chevron{transform:rotate(-90deg)}
+.tl-card.collapsed .tl-body,.tl-card.collapsed .stay-pill{display:none}
+
+/* ── Stay tonight pill ── */
+.stay-pill{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+.stay-pill .sp-ico{font-size:14px;line-height:1;flex-shrink:0}
+.stay-pill .sp-txt b{font-weight:700}
+.stay-pill.train .sp-txt b{color:var(--accent2)}
+.stay-pill.needed .sp-txt b{color:var(--today)}
+.stay-pill.home .sp-txt b{color:var(--accent)}
+.stay-pill.booked .sp-txt b{color:var(--accent)}
+
+/* ── WhatsApp share button ── */
+.wa-btn{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(76px,calc(env(safe-area-inset-bottom) + 76px));width:46px;height:46px;border-radius:50%;background:#25D366;color:#fff;border:none;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 10px rgba(0,0,0,.25);text-decoration:none;z-index:20;transition:transform .2s,box-shadow .2s}
+.wa-btn:hover{transform:scale(1.08);box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.wa-btn svg{width:24px;height:24px;fill:#fff}
+
+/* ── Footer ── */
+footer{background:var(--band);color:#ddd;padding:40px 0;margin-top:30px}
+.footer-logo{width:38px;height:38px;display:block;margin-bottom:12px}
+footer p{color:#aaa;font-size:13px}
+
+/* ── To top ── */
+.to-top{position:fixed;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));width:46px;height:46px;border-radius:50%;background:var(--accent);color:#fff;border:none;display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow);cursor:pointer;opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .25s,transform .25s;z-index:20}
 .to-top.show{opacity:1;pointer-events:auto;transform:translateY(0)}
 .to-top:hover{filter:brightness(1.1)}
-.to-top svg{width:20px;height:20px}
 @media(prefers-reduced-motion:reduce){.to-top{transition:none}}
 
-@media(max-width:800px){
-  .grid,.members{grid-template-columns:1fr 1fr}
-  .day{grid-template-columns:1fr}
-  .info,.checks{grid-template-columns:1fr}
-}
-@media(max-width:640px){
-  .cal-label{display:none}
-  .cal-cell{aspect-ratio:auto;min-height:44px;padding:8px 2px;align-items:center;justify-content:center}
-  .cal-grid{gap:5px}
-}
+/* ── Responsive ── */
 @media(max-width:520px){
-  .grid,.members{grid-template-columns:1fr}
-  .hero{padding:44px 0}
-  .hero-photo{height:220px;margin-top:26px}
-  section{padding:38px 0}
-  .container{padding:0 17px;padding-left:max(17px,env(safe-area-inset-left));padding-right:max(17px,env(safe-area-inset-right))}
-  .day{padding:18px}
-  .day-photo{height:190px}
-  nav a{padding:9px 13px;font-size:12.5px;min-height:38px}
-  .navinner{padding:8px 10px;gap:7px}
+  .container{padding:0 18px;padding-left:max(18px,env(safe-area-inset-left));padding-right:max(18px,env(safe-area-inset-right))}
+  .tl-wrap::before{left:18px}
+  .tl-item{grid-template-columns:36px 1fr;gap:0 14px}
+  .tl-card{padding:16px 18px 18px}
+  .tl-section{grid-template-columns:80px 1fr;gap:0 12px}
+  section{padding:48px 0}
 }
 @media(max-width:360px){
   h1{letter-spacing:-.04em}
-  .pill{font-size:12px;padding:8px 11px}
-  .cal-num{font-size:12px}
-}
-@media print{
-  nav,.hero-photo,.to-top,.flagline,.trip-map{display:none}
-  .hero{background:#fff;color:#000;padding:20px 0}
-  .kicker,.hero p,.hero .crew-line,.namaste,.countdown .cd-num,.countdown .cd-label{color:#333}
-  .countdown{border-color:#ccc;background:none}
-  section{padding:22px 0}
-  .day,.card,.member,.check,table{box-shadow:none}
+  .tl-date{font-size:19px}
 }
 </style>
-<script>
-function imgFallback(el){
-  el.onerror=null;
-  el.src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='800' height='450' fill='%23e8eee9'/%3E%3Cpath d='M0 340L150 190L260 300L410 130L560 290L660 190L800 330L800 450L0 450Z' fill='%23c3d3c8'/%3E%3Ccircle cx='650' cy='110' r='40' fill='%23f4efe2'/%3E%3C/svg%3E";
-  el.style.opacity="1";
-}
-</script>
+<script>function imgFallback(el){el.onerror=null;el.src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='450'%3E%3Crect width='800' height='450' fill='%23e8eee9'/%3E%3Cpath d='M0 340L150 190L260 300L410 130L560 290L660 190L800 330L800 450L0 450Z' fill='%23c3d3c8'/%3E%3Ccircle cx='650' cy='110' r='40' fill='%23f4efe2'/%3E%3C/svg%3E";el.style.opacity="1"}</script>
 </head>
 <body>
 <div class="flagline"></div>
 
+<!-- ── HERO ── -->
 <header class="hero">
   <div class="container">
-    <svg class="hero-logo" viewBox="0 0 512 512" role="img" aria-label="This Time Nepal logo — five prayer flags over five mountain peaks, one for each friend">
+    <svg class="hero-logo" viewBox="0 0 512 512" role="img" aria-label="This Time Nepal logo — five prayer flags over five mountain peaks">
       <circle cx="404" cy="126" r="22" fill="#e8c07a" opacity="0.95"/>
       <line x1="130" y1="175" x2="374" y2="175" stroke="#807c72" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
       <path d="M140 175 L163 175 L151.5 199 Z" fill="#2d5f8a"/>
@@ -227,570 +238,504 @@ function imgFallback(el){
       <path d="M349 175 L372 175 L360.5 199 Z" fill="#e8c07a"/>
       <path d="M40 460 L110 330 L175 390 L220 260 L256 220 L292 260 L340 390 L405 330 L472 460 Z" fill="#f2ece0"/>
     </svg>
-    <div class="kicker">Group Trip • 18–27 October 2026</div>
+    <div class="kicker">Group Trip · 18–30 October 2026</div>
     <p class="namaste">नमस्ते — welcome to the journey</p>
     <h1>This Time Nepal</h1>
-    <p>Five friends, one long-overdue reunion — and the first time any of us are crossing a border together. Ten days chasing Himalayan sunrises and the places that hold Ramayana, Buddhism, Shiva and Shakti between them: the trip we kept promising each other we'd finally take.</p>
+    <p class="tagline">Five friends. One promise. Finally.</p>
+    <p>Not a tour. Not a package. Just five friends who've been meaning to do this for way too long — and one October where we finally ran out of excuses.</p>
     <p class="crew-line">Debasis · Laxminarayan · Satyabrata · Mrutyunjit · Debiprasad</p>
     <div class="countdown" id="countdown" aria-live="polite"></div>
     <div class="meta">
       <span class="pill">5 friends, together again</span>
-      <span class="pill">Public transport preferred</span>
-      <span class="pill">India → Raxaul → Nepal</span>
-      <span class="pill">Scenic + Mythological</span>
-      <span class="pill">Draft for group review</span>
+      <span class="pill">All by train &amp; bus</span>
+      <span class="pill">BBSR → Nepal → Rourkela → BBSR</span>
+      <span class="pill">Sacred + Scenic</span>
     </div>
     <img class="hero-photo" src="https://nepalexplorevehicle.com/uploads/socialmedia/a-morning-view-from-pokhara-nepal.jpg" alt="Pokhara, Phewa Lake and Himalayan mountains" loading="eager" decoding="async" onerror="imgFallback(this)">
-
   </div>
 </header>
 
+<!-- ── NAV ── -->
 <nav>
   <div class="navinner">
-    <a href="#overview">Overview</a>
-    <a href="#calendar">Calendar</a>
     <a href="#map">Map</a>
-    <a href="#members">Members</a>
     <a href="#itinerary">Itinerary</a>
-    <a href="#transport">Transport</a>
-    <a href="#budget">Budget</a>
-    <a href="#packing">Packing</a>
-    <a href="#documents">Immigration</a>
-    <a href="#todo">To-do</a>
-    <a href="#sources">Sources</a>
   </div>
 </nav>
 
-<datalist id="whoNames">
-  <option value="Debasis"></option>
-  <option value="Laxminarayan"></option>
-  <option value="Satyabrata"></option>
-  <option value="Mrutyunjit"></option>
-  <option value="Debiprasad"></option>
-</datalist>
-
 <main>
-<section id="overview">
-  <div class="container">
-    <h2>The journey at a glance</h2>
-    <p class="lead">The Nepal portion starts on 20 October at Raxaul/Birgunj and runs through 26 October. 19 October is used as the India-side staging day so the group can cross the border fresh on the morning of the 20th.</p>
-    <div class="grid">
-      <div class="card"><div class="tag">Ramayana</div><h3>Janakpur</h3><p>Janaki Mandir, Ram-Janaki Vivah Mandap and Dhanushadham.</p></div>
-      <div class="card"><div class="tag">Buddhist heritage</div><h3>Lumbini</h3><p>Maya Devi Temple, Sacred Garden, Ashoka Pillar and international monasteries.</p></div>
-      <div class="card"><div class="tag">Himalayas</div><h3>Pokhara</h3><p>Phewa Lake, Sarangkot sunrise, mountain views, paragliding and Peace Pagoda.</p></div>
-      <div class="card"><div class="tag">Pilgrimage</div><h3>Manakamana</h3><p>Mountain pilgrimage combined with the cable-car experience.</p></div>
-      <div class="card"><div class="tag">Shiva</div><h3>Pashupatinath</h3><p>Major Shiva pilgrimage site in Kathmandu.</p></div>
-      <div class="card"><div class="tag">Shakti tradition</div><h3>Guhyeshwari</h3><p>Important Kathmandu pilgrimage site associated with the Shakti Peetha tradition.</p></div>
-    </div>
-  </div>
-</section>
 
-<section id="calendar">
-  <div class="container">
-    <h2>October 2026 at a glance</h2>
-    <p class="lead">Ten travel days, 18–27 October. Tap any highlighted date to jump to that day's plan.</p>
-    <div class="cal-card">
-      <div class="cal-grid">
-        <div class="cal-head">Sun</div><div class="cal-head">Mon</div><div class="cal-head">Tue</div><div class="cal-head">Wed</div><div class="cal-head">Thu</div><div class="cal-head">Fri</div><div class="cal-head">Sat</div>
-        <div class="cal-cell empty"></div><div class="cal-cell empty"></div><div class="cal-cell empty"></div><div class="cal-cell empty"></div>
-        <div class="cal-cell"><div class="cal-num">1</div></div>
-        <div class="cal-cell"><div class="cal-num">2</div></div>
-        <div class="cal-cell"><div class="cal-num">3</div></div>
-        <div class="cal-cell"><div class="cal-num">4</div></div>
-        <div class="cal-cell"><div class="cal-num">5</div></div>
-        <div class="cal-cell"><div class="cal-num">6</div></div>
-        <div class="cal-cell"><div class="cal-num">7</div></div>
-        <div class="cal-cell"><div class="cal-num">8</div></div>
-        <div class="cal-cell"><div class="cal-num">9</div></div>
-        <div class="cal-cell"><div class="cal-num">10</div></div>
-        <div class="cal-cell"><div class="cal-num">11</div></div>
-        <div class="cal-cell"><div class="cal-num">12</div></div>
-        <div class="cal-cell"><div class="cal-num">13</div></div>
-        <div class="cal-cell"><div class="cal-num">14</div></div>
-        <div class="cal-cell"><div class="cal-num">15</div></div>
-        <div class="cal-cell"><div class="cal-num">16</div></div>
-        <div class="cal-cell"><div class="cal-num">17</div></div>
-        <a class="cal-cell trip" href="#d18"><div class="cal-num">18</div><div class="cal-label">Kolkata</div></a>
-        <a class="cal-cell trip" href="#d19"><div class="cal-num">19</div><div class="cal-label">Raxaul border</div></a>
-        <a class="cal-cell trip" href="#d20"><div class="cal-num">20</div><div class="cal-label">Janakpur</div></a>
-        <a class="cal-cell trip" href="#d21"><div class="cal-num">21</div><div class="cal-label">Dhanushadham → Lumbini</div></a>
-        <a class="cal-cell trip" href="#d22"><div class="cal-num">22</div><div class="cal-label">Lumbini</div></a>
-        <a class="cal-cell trip" href="#d23"><div class="cal-num">23</div><div class="cal-label">Pokhara</div></a>
-        <a class="cal-cell trip" href="#d24"><div class="cal-num">24</div><div class="cal-label">Sarangkot sunrise</div></a>
-        <a class="cal-cell trip" href="#d25"><div class="cal-num">25</div><div class="cal-label">Manakamana → KTM</div></a>
-        <a class="cal-cell trip" href="#d26"><div class="cal-num">26</div><div class="cal-label">Pashupatinath</div></a>
-        <a class="cal-cell trip" href="#d27"><div class="cal-num">27</div><div class="cal-label">Return journey</div></a>
-        <div class="cal-cell"><div class="cal-num">28</div></div>
-        <div class="cal-cell"><div class="cal-num">29</div></div>
-        <div class="cal-cell"><div class="cal-num">30</div></div>
-        <div class="cal-cell"><div class="cal-num">31</div></div>
-      </div>
-      <div class="cal-legend">
-        <span><i style="background:var(--soft);border:1px solid var(--accent)"></i>Travel day</span>
-        <span><i style="outline:2px solid var(--today);background:transparent"></i>Today</span>
-      </div>
-    </div>
-  </div>
-</section>
-
+<!-- ── MAP ── -->
 <section id="map">
   <div class="container">
     <h2>Route on the map</h2>
-    <p class="lead">Every overnight stop and side trip, in travel order — starting and ending in Bhubaneswar. Tap a pin for details, or its link to jump straight to that day's plan.</p>
-    <div id="tripMap" class="trip-map" role="img" aria-label="Map of the trip route starting and ending in Bhubaneswar, through Kolkata, Janakpur, Lumbini, Pokhara, Manakamana and Kathmandu"></div>
+    <p class="lead">Every stop in travel order — starting in Bhubaneswar, looping through Nepal and back. Tap a pin for details.</p>
+    <div id="tripMap" class="trip-map" role="img" aria-label="Map of the trip route through Nepal"></div>
     <div class="map-legend">
       <span><i style="background:var(--accent)"></i>Overnight stop</span>
-      <span><i style="background:var(--accent2)"></i>Side trip</span>
+      <span><i style="background:var(--accent2)"></i>Side trip / viewpoint</span>
     </div>
   </div>
 </section>
 
-<section id="members">
-  <div class="container">
-    <h2>Travel crew</h2>
-    <p class="lead">Five-member team. Final bookings and costs can be reviewed together before locking the itinerary.</p>
-    <div class="members">
-      <div class="member">Debasis Muduli</div>
-      <div class="member">Laxminarayan Mohanty</div>
-      <div class="member">Satyabrata Pattnayak</div>
-      <div class="member">Mrutyunjit Pattanaik</div>
-      <div class="member">Debiprasad Sena</div>
-    </div>
-  </div>
-</section>
-
+<!-- ── ITINERARY ── -->
 <section id="itinerary">
   <div class="container">
-    <h2>Complete itinerary</h2>
-    <p class="lead">Dates, places to cover, preferred transport and overnight base. Timings are planning targets, not confirmed schedules.</p>
+    <h2>Day-by-day itinerary</h2>
+    <p class="lead">Each dot marks a day on the journey. The connecting line runs the full route from BBSR to Raxaul and back.</p>
 
-    <div class="timeline">
-
-      <article class="day" id="d18">
-        <div><div class="date">18 Oct</div><div class="small">Day 0</div></div>
-        <div>
-          <div class="daytitle">Bhubaneswar → Kolkata</div>
-          <div class="route">Bhubaneswar → Kolkata</div>
-          <ul>
-            <li>Depart Bhubaneswar in the morning.</li>
-            <li>Target arrival in Kolkata around 12:00 PM.</li>
-            <li>Afternoon/evening: Victoria Memorial, St. Paul's Cathedral, Maidan and Park Street, depending on energy and time.</li>
-            <li>Head to the station around 7:00 PM.</li>
-            <li>Target overnight train to Darbhanga around 8:00 PM.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Train</div>
-            <div><b>Night</b>Overnight train</div>
-            <div><b>Focus</b>Transit + Kolkata evening</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d19">
-        <div><div class="date">19 Oct</div><div class="small">Day 1</div></div>
-        <div>
-          <div class="daytitle">Darbhanga → Raxaul</div>
-          <div class="route">Darbhanga → Raxaul</div>
-          <ul>
-            <li>Arrive Darbhanga in the morning.</li>
-            <li>Breakfast and freshen up.</li>
-            <li>Continue to Raxaul by train if practical; otherwise bus/shared vehicle.</li>
-            <li>Reach Raxaul and use the day to organise documents, cash and border logistics.</li>
-            <li>Do not force a late border crossing. Sleep on the India side.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Train / bus</div>
-            <div><b>Night</b>Raxaul</div>
-            <div><b>Focus</b>Border staging</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d20">
-        <div><div class="date">20 Oct</div><div class="small">Nepal Day 1</div></div>
-        <div>
-          <img class="day-photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Janaki.mandir.jpg?width=1200" alt="Janaki Mandir in Janakpur" loading="lazy" decoding="async" onerror="imgFallback(this)">
-          <div class="daytitle">Raxaul → Birgunj → Janakpur</div>
-          <div class="route">India-Nepal border → Birgunj → Janakpur</div>
-          <ul>
-            <li>Cross the Raxaul-Birgunj land border in the morning.</li>
-            <li>Complete immigration/customs formalities.</li>
-            <li>Continue to Janakpur by public bus/local transport.</li>
-            <li>Visit Janaki Mandir.</li>
-            <li>Visit Ram-Janaki Vivah Mandap.</li>
-            <li>Explore Janakpur's Mithila streets and sacred ponds if time permits.</li>
-            <li>Return to Janaki Mandir in the evening if practical.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Walk/auto + bus</div>
-            <div><b>Night</b>Janakpur</div>
-            <div><b>Focus</b>Ramayana + Mithila heritage</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d21">
-        <div><div class="date">21 Oct</div><div class="small">Nepal Day 2</div></div>
-        <div>
-          <img class="day-photo" src="https://whatthenepal.com/wp-content/uploads/2024/01/WhatsApp-Image-2024-01-16-at-13.25.15_2444bd93.jpg" alt="Dhanushadham temple in Nepal" loading="lazy" decoding="async" onerror="imgFallback(this)">
-          <div class="daytitle">Janakpur → Dhanushadham → Lumbini</div>
-          <div class="route">Janakpur → Dhanushadham → Lumbini</div>
-          <ul>
-            <li>Early visit to Dhanushadham, around 18 km northeast of Janakpur.</li>
-            <li>Return towards Janakpur and start the long transfer to Lumbini.</li>
-            <li>Preferred: compare a shared/private vehicle for all five travellers against bus connections.</li>
-            <li>Public-transport fallback: bus connections, accepting a longer travel day.</li>
-            <li>Reach Lumbini, check in and rest.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Local bus + shared/private vehicle preferred</div>
-            <div><b>Night</b>Lumbini</div>
-            <div><b>Focus</b>Ramayana → Buddha</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d22">
-        <div><div class="date">22 Oct</div><div class="small">Nepal Day 3</div></div>
-        <div>
-          <img class="day-photo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/Maya_Devi_Temple_lumbini.jpg?width=1200" alt="Maya Devi Temple, Lumbini" loading="lazy" decoding="async" onerror="imgFallback(this)">
-          <div class="daytitle">Lumbini full day</div>
-          <div class="route">Sacred Garden → Monastic Zone → Lumbini</div>
-          <ul>
-            <li>Maya Devi Temple.</li>
-            <li>Sacred Garden and Ashoka Pillar.</li>
-            <li>Puskarini / Sacred Pond.</li>
-            <li>International Monastic Zone and selected monasteries.</li>
-            <li>Lumbini Museum or Crane Sanctuary if time permits.</li>
-            <li>Slow sunset/evening around the Sacred Garden.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Local e-rickshaw / walk</div>
-            <div><b>Night</b>Lumbini</div>
-            <div><b>Focus</b>Buddhist heritage</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d23">
-        <div><div class="date">23 Oct</div><div class="small">Nepal Day 4</div></div>
-        <div>
-          <img class="day-photo" src="https://pds.exblog.jp/pds/1/202003/25/54/f0140054_20195395.jpg" alt="Phewa Lake and Himalayan mountains in Pokhara" loading="lazy" decoding="async" onerror="imgFallback(this)">
-          <div class="daytitle">Lumbini → Pokhara</div>
-          <div class="route">Terai plains → hills → Pokhara</div>
-          <ul>
-            <li>Take a tourist bus towards Pokhara.</li>
-            <li>Use the journey as part of the scenic experience as the landscape changes from plains to hills.</li>
-            <li>Check in around Lakeside.</li>
-            <li>Phewa Lake boat ride.</li>
-            <li>Tal Barahi Temple.</li>
-            <li>Lakeside dinner and relaxed evening.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Tourist bus</div>
-            <div><b>Night</b>Pokhara</div>
-            <div><b>Focus</b>Scenic transition + lake</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d24">
-        <div><div class="date">24 Oct</div><div class="small">Nepal Day 5</div></div>
-        <div>
-          <img class="day-photo" src="https://cdn.getyourguide.com/img/tour/9f68505a433437063ab1126d08440a4034c9f516650f9740c3717ee5ecdee6ad.jpg/148.jpg" alt="Sarangkot sunrise over Pokhara" loading="lazy" decoding="async" onerror="imgFallback(this)">
-          <div class="daytitle">Pokhara → Sarangkot → Pokhara</div>
-          <div class="route">Pokhara → Sarangkot → Pokhara</div>
-          <ul>
-            <li>Wake around 4:30 AM.</li>
-            <li>Reach Sarangkot before sunrise.</li>
-            <li>Himalayan views: Annapurna, Machhapuchhre/Fishtail and surrounding ranges, weather permitting.</li>
-            <li>Optional paragliding for interested members.</li>
-            <li>World Peace Pagoda.</li>
-            <li>Devi's Fall and Gupteshwor Cave if time/energy permits.</li>
-            <li>Phewa Lake/Lakeside sunset and dinner.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Shared taxi/local + cable/road as needed</div>
-            <div><b>Night</b>Pokhara</div>
-            <div><b>Focus</b>Himalayas + adventure</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d25">
-        <div><div class="date">25 Oct</div><div class="small">Nepal Day 6</div></div>
-        <div>
-          <img class="day-photo" src="https://upload.wikimedia.org/wikipedia/commons/5/52/Manakamana_Cable_Car_tower.jpg" alt="Manakamana Cable Car and Himalayan foothills" loading="lazy" decoding="async" onerror="imgFallback(this)">
-          <div class="daytitle">Pokhara → Manakamana → Kathmandu</div>
-          <div class="route">Pokhara → Manakamana → Kathmandu</div>
-          <ul>
-            <li>Travel by tourist bus towards Manakamana.</li>
-            <li>Take the Manakamana Cable Car.</li>
-            <li>Visit Manakamana Temple.</li>
-            <li>Continue by road to Kathmandu.</li>
-            <li>Evening Thamel walk if the group has energy.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Tourist bus + cable car</div>
-            <div><b>Night</b>Kathmandu</div>
-            <div><b>Focus</b>Mountain pilgrimage</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d26">
-        <div><div class="date">26 Oct</div><div class="small">Nepal Day 7</div></div>
-        <div>
-          <img class="day-photo" src="https://nepaltraveller.com/images/main/1676189471.jpg" alt="Pashupatinath Temple complex in Kathmandu" loading="lazy" decoding="async" onerror="imgFallback(this)">
-          <div class="daytitle">Kathmandu → Pashupatinath → Raxaul</div>
-          <div class="route">Pashupatinath → Guhyeshwari → optional Swayambhunath → Birgunj → Raxaul</div>
-          <ul>
-            <li>Pashupatinath Temple.</li>
-            <li>Guhyeshwari Temple.</li>
-            <li>Optional Swayambhunath only if the return schedule allows.</li>
-            <li>Start Kathmandu → Birgunj as early as practical.</li>
-            <li>Cross back to Raxaul.</li>
-            <li>Stay in Raxaul rather than relying on a tight same-day Indian train connection.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Tourist bus</div>
-            <div><b>Night</b>Raxaul</div>
-            <div><b>Focus</b>Shiva + Shakti + return</div>
-          </div>
-        </div>
-      </article>
-
-      <article class="day" id="d27">
-        <div><div class="date">27 Oct</div><div class="small">Return</div></div>
-        <div>
-          <div class="daytitle">Raxaul → Darbhanga → Kolkata → Bhubaneswar</div>
-          <div class="route">Raxaul → Darbhanga → Kolkata → Bhubaneswar</div>
-          <ul>
-            <li>Return by train connections according to the final booking.</li>
-            <li>Build buffer time into every connection.</li>
-            <li>Final return timing should be locked only after checking actual train schedules.</li>
-          </ul>
-          <div class="info">
-            <div><b>Transport</b>Train</div>
-            <div><b>Night</b>En route / Bhubaneswar</div>
-            <div><b>Focus</b>Return</div>
-          </div>
-        </div>
-      </article>
-
+    <!-- Booking status bar -->
+    <div class="booking-bar">
+      <div class="bb-item confirmed">
+        <div class="bb-num">3</div>
+        <div class="bb-label">Tickets confirmed</div>
+        <div class="bb-detail">BBS → HWH<br>KOAA → DBG<br>RXL → HWH</div>
+      </div>
+      <div class="bb-item pending">
+        <div class="bb-num">2</div>
+        <div class="bb-label">Tickets pending</div>
+        <div class="bb-detail">HWH → Rourkela<br>Rourkela → BBSR</div>
+      </div>
+      <div class="bb-item hotel">
+        <div class="bb-num">9</div>
+        <div class="bb-label">Hotels to book</div>
+        <div class="bb-detail">Janakpur · KTM × 3<br>Pokhara × 3 · Lumbini · Raxaul</div>
+      </div>
     </div>
+
+    <!-- Legend -->
+    <div style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px;font-size:12px">
+      <span style="display:flex;align-items:center;gap:7px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:50%;background:var(--accent2);display:inline-block"></span>Travel day</span>
+      <span style="display:flex;align-items:center;gap:7px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:50%;background:var(--accent);display:inline-block"></span>Sightseeing day</span>
+      <span style="display:flex;align-items:center;gap:7px;color:var(--muted)"><span style="width:10px;height:10px;border-radius:50%;background:var(--stay);display:inline-block"></span>Mixed day</span>
+    </div>
+
+    <div class="tl-wrap">
+
+      <!-- 18 OCT -->
+      <div class="tl-item travel" id="d18">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">18 Oct</div><div class="tl-sub">BBSR → Kolkata → Darbhanga</div></div>
+            <div class="day-badge">Travel</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">06:00</div><span class="stag t">Travel</span></div>
+              <div class="tl-items">
+                <div class="tl-li b">Jana Satabdi Express · 12074</div>
+                <div class="tl-li">Bhubaneswar (BBS) → Howrah (HWH)</div>
+                <div class="tl-li">2S · Coach D2 · Seats 73–77</div>
+              </div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">12:40</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items">
+                <div class="tl-li b">Arrive Howrah · Kolkata layover</div>
+                <div class="tl-li">Howrah Bridge walk</div>
+                <div class="tl-li">Mullik Ghat Flower Market</div>
+                <div class="tl-li">Strand Road / Hooghly riverfront</div>
+                <div class="tl-li">Victoria Memorial gardens (exterior)</div>
+              </div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items">
+                <div class="tl-li">Freshen up · dinner in Kolkata</div>
+                <div class="tl-li">Pack &amp; head to Kolkata station (KOAA)</div>
+              </div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">20:55</div><span class="stag t">Overnight</span></div>
+              <div class="tl-items">
+                <div class="tl-li b">Mithilanchal Express · 13155</div>
+                <div class="tl-li">Kolkata (KOAA) → Darbhanga (DBG)</div>
+                <div class="tl-li">3A · Coach B2 · Arrives 09:15 next day</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 19 OCT -->
+      <div class="tl-item mixed" id="d19">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">19 Oct</div><div class="tl-sub">Darbhanga → Janakpur → Kathmandu</div></div>
+            <div class="day-badge">Mixed</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">09:15</div><span class="stag t">Travel</span></div>
+              <div class="tl-items"><div class="tl-li">Arrive Darbhanga (DBG)</div><div class="tl-li">Travel onward to Janakpur</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items">
+                <div class="tl-li">Janaki Mandir</div><div class="tl-li">Vivah Mandap</div>
+                <div class="tl-li">Ram Mandir</div><div class="tl-li">Laxman Mandir</div>
+                <div class="tl-li">Dhanush Sagar</div><div class="tl-li">Ganga Sagar</div>
+                <div class="tl-li">Mithila art / culture</div><div class="tl-li">Local market (optional)</div>
+              </div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Dinner in Janakpur</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag t">Overnight</span></div>
+              <div class="tl-items"><div class="tl-li">Janakpur → Kathmandu</div><div class="tl-li">Overnight travel</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 20 OCT -->
+      <div class="tl-item sightsee" id="d20">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">20 Oct</div><div class="tl-sub">Kathmandu · Day 1</div></div>
+            <div class="day-badge">Sightseeing</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Pashupatinath</div><div class="tl-li">Boudhanath</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Swayambhunath</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Thamel</div><div class="tl-li">Walk · shopping · cafés</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag h">Stay</span></div>
+              <div class="tl-items"><div class="tl-li">Stay in Kathmandu</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 21 OCT -->
+      <div class="tl-item sightsee" id="d21">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">21 Oct</div><div class="tl-sub">Kathmandu · Day 2</div></div>
+            <div class="day-badge">Sightseeing</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Chandragiri Cable Car</div><div class="tl-li">Chandragiri Hills · views · temple</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Kathmandu Durbar Square</div><div class="tl-li">Patan Durbar Square</div><div class="tl-li">Patan Museum / Golden Temple</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Asan Market / Thamel</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag h">Stay</span></div>
+              <div class="tl-items"><div class="tl-li">Stay in Kathmandu</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 22 OCT -->
+      <div class="tl-item mixed" id="d22">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">22 Oct</div><div class="tl-sub">Kathmandu → Manakamana → Pokhara</div></div>
+            <div class="day-badge">Mixed</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag t">Travel</span></div>
+              <div class="tl-items"><div class="tl-li">Leave Kathmandu → Manakamana</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Manakamana Cable Car</div><div class="tl-li">Manakamana Temple</div><div class="tl-li">Explore around temple</div><div class="tl-li">Lunch</div><div class="tl-li">Manakamana → Pokhara</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag t">Arrive</span></div>
+              <div class="tl-items"><div class="tl-li">Reach Pokhara</div><div class="tl-li">Hotel check-in</div><div class="tl-li">Lakeside walk</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag h">Stay</span></div>
+              <div class="tl-items"><div class="tl-li">Dinner</div><div class="tl-li">Stay in Pokhara</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 23 OCT -->
+      <div class="tl-item sightsee" id="d23">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">23 Oct</div><div class="tl-sub">Pokhara · Day 1</div></div>
+            <div class="day-badge">Sightseeing</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Sarangkot Sunrise</div><div class="tl-li">Himalayan panorama</div><div class="tl-li">Bindhyabasini Temple</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Old Bazaar</div><div class="tl-li">International Mountain Museum</div><div class="tl-li">Davis Falls</div><div class="tl-li">Gupteshwor Cave</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Lakeside</div><div class="tl-li">Free time / shopping</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag h">Stay</span></div>
+              <div class="tl-items"><div class="tl-li">Dinner</div><div class="tl-li">Stay in Pokhara</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 24 OCT -->
+      <div class="tl-item sightsee" id="d24">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">24 Oct</div><div class="tl-sub">Pokhara · Day 2</div></div>
+            <div class="day-badge">Sightseeing</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Phewa Lake</div><div class="tl-li">Boating</div><div class="tl-li">Tal Barahi Temple</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">World Peace Pagoda</div><div class="tl-li">Pumdikot Shiva Statue</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Return to Lakeside</div><div class="tl-li">Lakeside walk / cafés</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag h">Stay</span></div>
+              <div class="tl-items"><div class="tl-li">Dinner</div><div class="tl-li">Stay in Pokhara</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 25 OCT -->
+      <div class="tl-item mixed" id="d25">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">25 Oct</div><div class="tl-sub">Pokhara · Day 3 → Lumbini</div></div>
+            <div class="day-badge">Mixed</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Begnas Lake OR Paragliding</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Seti River Gorge</div><div class="tl-li">Any remaining Pokhara places</div><div class="tl-li">Free time at Lakeside</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Early dinner</div><div class="tl-li">Return to hotel</div><div class="tl-li">Pack for Lumbini</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag t">Overnight</span></div>
+              <div class="tl-items"><div class="tl-li">Pokhara → Lumbini</div><div class="tl-li">Overnight travel</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 26 OCT -->
+      <div class="tl-item sightsee" id="d26">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">26 Oct</div><div class="tl-sub">Lumbini</div></div>
+            <div class="day-badge">Sightseeing</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Reach Lumbini</div><div class="tl-li">Maya Devi Temple</div><div class="tl-li">Sacred Garden</div><div class="tl-li">Ashoka Pillar</div><div class="tl-li">Puskarini</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag s">Sightseeing</span></div>
+              <div class="tl-items"><div class="tl-li">Monastic Zone</div><div class="tl-li">International Monasteries</div><div class="tl-li">World Peace Pagoda</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Explore Lumbini</div><div class="tl-li">Relax / local area</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag h">Stay</span></div>
+              <div class="tl-items"><div class="tl-li">Stay in Lumbini</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 27 OCT -->
+      <div class="tl-item travel" id="d27">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">27 Oct</div><div class="tl-sub">Lumbini → Birgunj → Raxaul</div></div>
+            <div class="day-badge">Travel</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag t">Travel</span></div>
+              <div class="tl-items"><div class="tl-li">Breakfast</div><div class="tl-li">Complete remaining Lumbini visit</div><div class="tl-li">Leave for Birgunj</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag t">Travel</span></div>
+              <div class="tl-items"><div class="tl-li">Lumbini → Birgunj</div><div class="tl-li">Lunch</div><div class="tl-li">Short Birgunj local visit if time permits</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag t">Border</span></div>
+              <div class="tl-items"><div class="tl-li">Birgunj → Raxaul</div><div class="tl-li">Cross Nepal–India border</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag h">Stay</span></div>
+              <div class="tl-items"><div class="tl-li">Stay in Raxaul</div><div class="tl-li">Prepare for next morning's train</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 28 OCT -->
+      <div class="tl-item travel" id="d28">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">28 Oct</div><div class="tl-sub">Raxaul → Howrah · Return</div></div>
+            <div class="day-badge">Travel</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Breakfast in Raxaul</div><div class="tl-li">Head to Raxaul Junction (RXL)</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">10:10</div><span class="stag t">Depart</span></div>
+              <div class="tl-items">
+                <div class="tl-li b">Mithila Express · 13022</div>
+                <div class="tl-li">Raxaul Jn (RXL) → Howrah Jn (HWH)</div>
+                <div class="tl-li">3A · Coach B3 · Seats 34–40</div>
+                <div class="tl-li">Arrives Howrah 04:00 · 29 Oct</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 29 OCT -->
+      <div class="tl-item mixed" id="d29">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">29 Oct</div><div class="tl-sub">Howrah → Rourkela</div></div>
+            <div class="day-badge">Travel</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">04:00</div><span class="stag t">Arrive</span></div>
+              <div class="tl-items">
+                <div class="tl-li b">Arrive Howrah Jn</div>
+                <div class="tl-li">End of Mithila Express journey from Raxaul</div>
+              </div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag t">Travel</span></div>
+              <div class="tl-items">
+                <div class="tl-li">HWH → Rourkela</div>
+                <div class="tl-li" style="color:var(--accent2);font-size:12px">🎫 Ticket not booked yet</div>
+              </div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Afternoon</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items">
+                <div class="tl-li">Arrive Rourkela · check in</div>
+                <div class="tl-li">Rest &amp; unwind after the trip</div>
+              </div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Night</div><span class="stag h">Stay</span></div>
+              <div class="tl-items"><div class="tl-li">Overnight in Rourkela</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 30 OCT -->
+      <div class="tl-item travel" id="d30">
+        <div class="tl-dot-col"><div class="tl-dot"></div></div>
+        <div class="tl-card">
+          <div class="tl-head">
+            <div><div class="tl-date">30 Oct</div><div class="tl-sub">Rourkela → Bhubaneswar</div></div>
+            <div class="day-badge">Travel</div>
+          </div>
+          <div class="tl-sections">
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Morning</div><span class="stag l">Leisure</span></div>
+              <div class="tl-items"><div class="tl-li">Relax · late breakfast in Rourkela</div></div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Day</div><span class="stag t">Travel</span></div>
+              <div class="tl-items">
+                <div class="tl-li b">Rourkela → Bhubaneswar</div>
+                <div class="tl-li" style="color:var(--accent2);font-size:12px">🎫 Ticket not booked yet</div>
+              </div>
+            </div>
+            <div class="tl-section">
+              <div class="tl-label-col"><div class="tl-time">Evening</div><span class="stag h">Home</span></div>
+              <div class="tl-items"><div class="tl-li b">Back in Bhubaneswar 🏠</div><div class="tl-li">Trip complete</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tl-wrap -->
   </div>
 </section>
 
-<section id="transport">
-  <div class="container">
-    <h2>Transport strategy</h2>
-    <p class="lead">Public transport is the default. A shared/private vehicle is only a fallback where five people can split the cost and materially reduce a difficult connection.</p>
-    <div class="table-wrap">
-    <table>
-      <thead><tr><th>Route</th><th>Preferred</th><th>Backup</th><th>Planning note</th></tr></thead>
-      <tbody>
-        <tr><td>Bhubaneswar → Kolkata</td><td><strong>Booked train</strong></td><td>None</td><td>Confirmed. Target arrival around 12:00 PM on 18 Oct.</td></tr>
-        <tr><td>Kolkata → Darbhanga</td><td>Overnight train</td><td>Bus</td><td>Target departure around 8 PM.</td></tr>
-        <tr><td>Darbhanga → Raxaul</td><td>Train</td><td>Bus/shared vehicle</td><td>Confirm actual 19 Oct schedule.</td></tr>
-        <tr><td>Raxaul → Birgunj → Janakpur</td><td>Local/public transport</td><td>Shared vehicle</td><td>Cross border in the morning.</td></tr>
-        <tr><td>Janakpur → Dhanushadham</td><td>Local bus</td><td>Shared auto/vehicle</td><td>Dhanushadham is about 18 km from Janakpur.</td></tr>
-        <tr><td>Janakpur → Lumbini</td><td>Bus if practical</td><td><strong>Shared/private vehicle</strong></td><td>One of the hardest legs. Compare total cost for five.</td></tr>
-        <tr><td>Lumbini → Pokhara</td><td>Tourist bus</td><td>Shared/private vehicle</td><td>Long scenic road day.</td></tr>
-        <tr><td>Pokhara → Sarangkot</td><td>Shared taxi/local</td><td>Private taxi</td><td>Early start for sunrise.</td></tr>
-        <tr><td>Pokhara → Manakamana → Kathmandu</td><td>Tourist bus + cable car</td><td>Private vehicle</td><td>Use the road journey as part of the experience.</td></tr>
-        <tr><td>Kathmandu → Raxaul</td><td>Tourist bus</td><td>Shared/private vehicle</td><td>Leave early; keep a large buffer.</td></tr>
-      </tbody>
-    </table>
-    </div>
-  </div>
-</section>
-
-<section id="budget">
-  <div class="container">
-    <h2>Approx. budget, per person</h2>
-    <p class="lead">Rough planning-stage numbers only — not a quote. Based on typical fares and rates as of August 2026. Re-check everything before you actually book, and swap in real prices once paid.</p>
-    <div class="highlight warn">
-      <strong>These are estimates, not prices.</strong> Train class, hotel choice and season all move these numbers. Treat every row as "approx" until someone in the group has actually paid it.
-    </div>
-    <div class="table-wrap">
-    <table>
-      <thead><tr><th>Item</th><th>Approx cost</th><th>Note</th></tr></thead>
-      <tbody>
-        <tr><td>Bhubaneswar → Kolkata (train)</td><td>Already booked</td><td>Use the real fare once known.</td></tr>
-        <tr><td>Kolkata → Darbhanga (overnight train)</td><td>≈ ₹400–900</td><td>Sleeper/3AC class.</td></tr>
-        <tr><td>Darbhanga → Raxaul (train/bus)</td><td>≈ ₹100–250</td><td></td></tr>
-        <tr><td>Nepal internal transport</td><td>≈ ₹3,000–5,500</td><td>Birgunj → Janakpur → Dhanushadham → Lumbini → Pokhara → Manakamana → Kathmandu → Raxaul, mixing local bus with shared vehicle for the harder legs.</td></tr>
-        <tr><td>Manakamana Cable Car (round trip)</td><td>≈ NPR 1,070 (~₹670)</td><td>Indian-citizen rate — carry passport/voter ID or you may be charged the foreigner rate.</td></tr>
-        <tr><td>Return: Raxaul → Darbhanga → Kolkata → Bhubaneswar</td><td>≈ ₹800–1,600</td><td>Train, subject to actual booking.</td></tr>
-        <tr><td>Hotels, 6 nights (shared rooms)</td><td>≈ ₹5,000–9,000</td><td>Raxaul, Janakpur, Lumbini, Pokhara ×2, Kathmandu.</td></tr>
-        <tr><td>Meals, 10 days</td><td>≈ ₹5,000–8,000</td><td>Budget to modest local eating.</td></tr>
-        <tr><td>Nepal SIM + data (NTC/Ncell)</td><td>≈ NPR 300–600 (~₹190–375)</td><td>Buy at the airport/border counter — takes 5–10 minutes with your passport.</td></tr>
-        <tr><td>Temple/monastery entry &amp; donations</td><td>≈ ₹500–1,000</td><td>Janaki Mandir, Lumbini zone, Pashupatinath, Guhyeshwari.</td></tr>
-        <tr class="total"><td>Approx. total per person</td><td>≈ ₹16,000–27,000</td><td>Excludes paragliding, shopping and any private-vehicle upgrades.</td></tr>
-        <tr class="optional"><td>Optional: Paragliding (Sarangkot/Pokhara)</td><td>≈ ₹6,000–8,000</td><td>Only for interested members — confirm before adding to the shared budget.</td></tr>
-      </tbody>
-    </table>
-    </div>
-    <p class="source">For 5 people, the approx. total above works out to roughly ₹80,000–1,35,000 for the group, excluding paragliding. Update this table with real figures as bookings are confirmed.</p>
-  </div>
-</section>
-
-<section id="packing">
-  <div class="container">
-    <h2>What to pack</h2>
-    <p class="lead">October means clear skies but cold mornings — Sarangkot at sunrise and Pokhara evenings both get chilly. Tap an item as you pack it.</p>
-    <div class="who-inline">
-      <label for="whoInput-pack">Checking items as</label>
-      <input type="text" id="whoInput-pack" class="who-input" list="whoNames" placeholder="Type your name…" autocomplete="off">
-      <span class="who-inline-note">— syncs live for everyone</span>
-    </div>
-    <p class="progress-line" id="packProgress"></p>
-    <h3>Clothing</h3>
-    <div class="checks" id="packClothing">
-      <label class="check"><input type="checkbox" data-store="pack-jacket"><span>Light jacket or fleece for Sarangkot sunrise and evenings</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-daywear"><span>2–3 breathable daywear sets</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-shoes"><span>Comfortable, already broken-in walking shoes</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-modest"><span>Modest clothing for temples — covered shoulders and knees</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-rain"><span>Light rain layer, just in case</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-socks"><span>Extra socks and a warm cap for early mornings</span></label>
-    </div>
-    <h3 style="margin-top:26px">Essentials</h3>
-    <div class="checks" id="packEssentials">
-      <label class="check"><input type="checkbox" data-store="pack-powerbank"><span>Power bank + charging cables</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-torch"><span>Torch or a reliable phone flashlight</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-sun"><span>Sunscreen and sunglasses</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-meds"><span>Personal medication + basic first-aid (ORS, motion sickness, pain relief)</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-bottle"><span>Reusable water bottle</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-wipes"><span>Wet wipes and hand sanitiser</span></label>
-    </div>
-    <h3 style="margin-top:26px">Nepal-specific</h3>
-    <div class="checks" id="packNepal">
-      <label class="check"><input type="checkbox" data-store="pack-cash-small"><span>Indian currency in ₹100 notes and smaller (see currency note below)</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-npr"><span>Some Nepali rupees exchanged in advance if possible</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-offline-maps"><span>Offline maps downloaded</span></label>
-      <label class="check"><input type="checkbox" data-store="pack-bookings"><span>Hotel bookings saved offline (screenshot or printout)</span></label>
-    </div>
-  </div>
-</section>
-
-<section id="documents">
-  <div class="container">
-    <h2>Immigration & border requirements</h2>
-    <p class="lead">This section is based on current Nepal Immigration guidance available in August 2026. Re-check official guidance immediately before departure.</p>
-
-    <div class="highlight">
-      <strong>For Indian citizens:</strong> Nepal does not require a visa. For entry, the current Birgunj Immigration Office says Indian citizens should present a valid Indian passport or an Election Commission-issued voter ID. Aadhaar and driving licence should not be relied upon as entry documents.
-    </div>
-
-    <div class="grid">
-      <div class="card"><div class="tag">Preferred</div><h3>Indian Passport</h3><p>Carry the original valid passport. This is the cleanest option for the group.</p></div>
-      <div class="card"><div class="tag">Alternative</div><h3>Original Voter ID</h3><p>Election Commission-issued voter identity card is the stated alternative for Indian citizens without passports.</p></div>
-      <div class="card"><div class="tag">Do not rely on</div><h3>Aadhaar / Driving Licence</h3><p>Current Birgunj immigration guidance says these are not accepted for entry.</p></div>
-    </div>
-
-    <h3 style="margin-top:30px">Carry for every traveller</h3>
-    <div class="who-inline">
-      <label for="whoInput-doc">Checking items as</label>
-      <input type="text" id="whoInput-doc" class="who-input" list="whoNames" placeholder="Type your name…" autocomplete="off">
-    </div>
-    <p class="progress-line" id="docProgress"></p>
-    <div class="checks" id="docChecks">
-      <label class="check"><input type="checkbox" data-store="doc-id"><span>Original passport or voter ID</span></label>
-      <label class="check"><input type="checkbox" data-store="doc-photocopy"><span>2 photocopies of the ID</span></label>
-      <label class="check"><input type="checkbox" data-store="doc-scan"><span>Digital scan stored offline</span></label>
-      <label class="check"><input type="checkbox" data-store="doc-photo"><span>2 passport-size photographs</span></label>
-      <label class="check"><input type="checkbox" data-store="doc-hotel"><span>Hotel booking confirmations</span></label>
-      <label class="check"><input type="checkbox" data-store="doc-transport"><span>Return/onward transport details</span></label>
-      <label class="check"><input type="checkbox" data-store="doc-insurance"><span>Travel insurance details</span></label>
-      <label class="check"><input type="checkbox" data-store="doc-emergency"><span>Emergency contact information</span></label>
-    </div>
-
-    <div class="highlight warn">
-      <strong>Border rule:</strong> Keep original IDs in your day bag, not inside checked/main luggage. At Raxaul/Birgunj, follow the immigration and customs instructions at the crossing. Do not assume that an app screenshot or a non-approved ID is enough.
-    </div>
-
-    <h3 style="margin-top:30px">Currency &amp; emergency contacts</h3>
-    <div class="highlight">
-      <strong>Indian currency rules in Nepal:</strong> ₹2,000 notes are not accepted at all. ₹500 and ₹200 notes issued after November 2016 are allowed only up to a limited total per person (₹25,000, as of the most recent rule change) — this has changed more than once, so re-check before you cross. Simplest approach: carry mostly ₹100 notes and smaller, and change the rest to Nepali rupees.
-    </div>
-    <div class="table-wrap">
-    <table>
-      <thead><tr><th>Contact</th><th>Number</th><th>Note</th></tr></thead>
-      <tbody>
-        <tr><td>Nepal Police</td><td>100</td><td></td></tr>
-        <tr><td>Ambulance</td><td>102</td><td></td></tr>
-        <tr><td>Fire</td><td>101</td><td></td></tr>
-        <tr><td>Tourist Police</td><td>1144</td><td>Trained to assist visitors — theft, harassment, general help.</td></tr>
-        <tr><td>Embassy of India, Kathmandu — 24/7 emergency</td><td>+977-9851316807</td><td>Verified from <a href="https://www.indembkathmandu.gov.in/contacts" target="_blank">indembkathmandu.gov.in</a></td></tr>
-        <tr><td>Embassy of India, Kathmandu — general/consular</td><td>+977-1-4423702</td><td>Mon–Fri, 9:00–17:30</td></tr>
-      </tbody>
-    </table>
-    </div>
-    <p class="source">Save these numbers offline (screenshot or a notes app) before you lose signal — don't rely on this page loading at the border.</p>
-  </div>
-</section>
-
-<section id="todo">
-  <div class="container">
-    <h2>Group to-do before booking</h2>
-    <p class="lead">Use this as the review checklist for the five-person group.</p>
-    <div class="who-inline">
-      <label for="whoInput-todo">Checking items as</label>
-      <input type="text" id="whoInput-todo" class="who-input" list="whoNames" placeholder="Type your name…" autocomplete="off">
-    </div>
-    <p class="progress-line" id="todoProgress"></p>
-    <div class="checks" id="todoChecks">
-      <label class="check"><input type="checkbox" data-store="todo-names"><span>Confirm all 5 travellers' names exactly as on ID</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-id"><span>Confirm passport/voter ID for each person</span></label>
-      <div class="check">✓ Bhubaneswar → Kolkata train <strong>BOOKED</strong></div>
-      <label class="check"><input type="checkbox" data-store="todo-book-kol-darb"><span>Book Kolkata → Darbhanga overnight train</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-check-darb-rax"><span>Check Darbhanga → Raxaul train/bus on 19 Oct</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-hotel-raxaul"><span>Book Raxaul hotel for 19 Oct</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-hotel-janakpur"><span>Book Janakpur hotel</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-hotel-lumbini"><span>Book Lumbini hotel</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-hotel-pokhara"><span>Book Pokhara hotel near Lakeside</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-hotel-ktm"><span>Book Kathmandu hotel</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-compare-jan-lum"><span>Compare Janakpur → Lumbini bus vs shared vehicle</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-bus-lum-pkr"><span>Reserve Lumbini → Pokhara tourist bus</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-bus-pkr-ktm"><span>Reserve Pokhara → Kathmandu tourist bus</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-manakamana"><span>Check Manakamana Cable Car operating details</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-sim"><span>Arrange Nepal SIM/roaming/data</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-npr-cash"><span>Carry some Nepalese rupees</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-offline-maps"><span>Download offline maps</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-insurance"><span>Get travel insurance</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-paragliding"><span>Confirm paragliding interest and budget</span></label>
-      <label class="check"><input type="checkbox" data-store="todo-buffer"><span>Build buffer into the 26 Oct return journey</span></label>
-    </div>
-
-    <div class="highlight">
-      <strong>Group decision:</strong> Review the route first. Once everyone agrees on the destinations, lock transport and hotels. The exact bus/train timings should be checked against live schedules before payment.
-    </div>
-  </div>
-</section>
-
-<section id="sources">
-  <div class="container">
-    <h2>Official references</h2>
-    <p class="lead">Use these links to re-check entry requirements and destination information before the trip.</p>
-    <div class="card">
-      <ul>
-        <li><a href="https://birgunj.immigration.gov.np/faq" target="_blank">Birgunj Immigration Office FAQ</a> – Indian citizen entry documents.</li>
-        <li><a href="https://tia.immigration.gov.np/faq" target="_blank">Nepal Immigration FAQ</a> – current Indian citizen identification guidance.</li>
-        <li><a href="https://trade.ntb.gov.np/travel-essentials/traveling-by-roadentry-points/" target="_blank">Nepal Tourism Board – Traveling by Road</a> – official land entry points and route distances.</li>
-        <li><a href="https://ntb.gov.np/dhanushadham--janakpur" target="_blank">Nepal Tourism Board – Dhanushadham</a> – Ramayana pilgrimage context.</li>
-        <li><a href="https://ntb.gov.np/en/pilgrimage-sites" target="_blank">Nepal Tourism Board – Pilgrimage Sites</a> – Janakpur, Lumbini, Manakamana, Pashupatinath and other pilgrimage destinations.</li>
-      </ul>
-      <p class="source">Prepared as a planning draft on 21 August 2026. Bhubaneswar → Kolkata train is already booked. Travel times, transport availability, attraction hours and border procedures can change. Verify again immediately before departure.</p>
-    </div>
-  </div>
-</section>
 </main>
 
-<div class="flagline flagline--thin"></div>
+<!-- ── SAFETY ── -->
+<section id="safety" style="padding:56px 0 48px">
+  <div class="container">
+    <h2>Live weather &amp; flood risk · Nepal</h2>
+    <p class="lead" style="margin-bottom:20px">Real-time rain, storm and river discharge data for the Nepal region. Switch layers inside the map to check floods, wind or lightning.</p>
+    <iframe src="https://embed.windy.com/embed2.html?lat=27.6&lon=84.6&zoom=7&overlay=rain&product=ecmwf&level=surface&menu=&message=true&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=default&metricTemp=default&radarRange=-1" width="100%" height="420" style="border:0;border-radius:12px;display:block" loading="lazy" title="Windy live Nepal weather"></iframe>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px">Powered by Windy.com · ECMWF data · Tip: tap the layers icon inside the map and choose <strong>Floods</strong> (river discharge) for disaster monitoring</p>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
 <footer>
   <div class="container">
-    <svg class="footer-logo" viewBox="0 0 512 512" role="img" aria-label="This Time Nepal logo">
+    <svg class="footer-logo" viewBox="0 0 512 512" aria-hidden="true">
       <circle cx="404" cy="126" r="22" fill="#e8c07a" opacity="0.95"/>
       <line x1="130" y1="175" x2="374" y2="175" stroke="#807c72" stroke-width="3" stroke-linecap="round" opacity="0.7"/>
       <path d="M140 175 L163 175 L151.5 199 Z" fill="#2d5f8a"/>
@@ -800,280 +745,192 @@ function imgFallback(el){
       <path d="M349 175 L372 175 L360.5 199 Z" fill="#e8c07a"/>
       <path d="M40 460 L110 330 L175 390 L220 260 L256 220 L292 260 L340 390 L405 330 L472 460 Z" fill="#f2ece0"/>
     </svg>
-    <div class="kicker">THIS TIME NEPAL · नेपाल</div>
-    <h2 style="color:#fff;margin-top:8px">Scenic roads. Sacred places. Good stories.</h2>
-    <p>18–27 October 2026 • 5 travellers • Draft itinerary for group review</p>
+    <div class="kicker" style="color:#b7c8bf">THIS TIME NEPAL · नेपाल</div>
+    <h2 style="color:#fff;margin-top:8px;font-size:clamp(18px,4vw,26px)">Scenic roads. Sacred places. Good stories.</h2>
+    <p>18–30 October 2026 · 5 friends · BBSR → Nepal → Rourkela → BBSR</p>
   </div>
 </footer>
 
+<a id="waBtn" class="wa-btn" href="#" target="_blank" rel="noopener noreferrer" aria-label="Share on WhatsApp">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
 <button id="toTop" class="to-top" aria-label="Back to top" title="Back to top">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
 </button>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-
 <script>
 (function(){
-  var today = new Date();
-  if (today.getFullYear() === 2026 && today.getMonth() === 9) {
-    var nums = document.querySelectorAll('.cal-cell .cal-num');
-    nums.forEach(function(n){
-      if (parseInt(n.textContent, 10) === today.getDate()) {
-        n.closest('.cal-cell').classList.add('today');
-      }
-    });
-  }
-
+  /* ── Active nav on scroll ── */
   var sections = Array.prototype.slice.call(document.querySelectorAll('main section[id]'));
   var links = Array.prototype.slice.call(document.querySelectorAll('nav a'));
-  if ('IntersectionObserver' in window && sections.length && links.length) {
-    var byId = {};
-    links.forEach(function(a){ byId[a.getAttribute('href').slice(1)] = a; });
-    var observer = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        var link = byId[entry.target.id];
-        if (!link) return;
-        if (entry.isIntersecting) {
-          links.forEach(function(a){ a.classList.remove('active'); });
-          link.classList.add('active');
-        }
+  if('IntersectionObserver' in window && sections.length && links.length){
+    var byId={};
+    links.forEach(function(a){byId[a.getAttribute('href').slice(1)]=a;});
+    var obs=new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var lk=byId[e.target.id];
+        if(!lk)return;
+        if(e.isIntersecting){links.forEach(function(a){a.classList.remove('active')});lk.classList.add('active')}
       });
-    }, { rootMargin: '-45% 0px -50% 0px' });
-    sections.forEach(function(s){ observer.observe(s); });
+    },{rootMargin:'-45% 0px -50% 0px'});
+    sections.forEach(function(s){obs.observe(s)});
   }
 
-  var toTop = document.getElementById('toTop');
-  if (toTop) {
-    window.addEventListener('scroll', function(){
-      if (window.scrollY > 420) toTop.classList.add('show');
-      else toTop.classList.remove('show');
-    }, { passive: true });
-    toTop.addEventListener('click', function(){
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' });
+  /* ── Back to top ── */
+  var toTop=document.getElementById('toTop');
+  if(toTop){
+    window.addEventListener('scroll',function(){toTop.classList.toggle('show',window.scrollY>420)},{passive:true});
+    toTop.addEventListener('click',function(){
+      window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});
     });
   }
 
-  function safeGet(k){ try { return localStorage.getItem(k); } catch(e){ return null; } }
-  function safeSet(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
-
-  // Paste your deployed Google Apps Script Web App URL here to turn on
-  // shared, cross-device checklist syncing via a Google Sheet. Leave blank
-  // and everything keeps working exactly as before (saved per-device only).
-  var SHEET_SYNC_URL = 'https://script.google.com/macros/s/AKfycbxP11DrMoDrxMpmLkNMD96sBSfqI3x1OqKmyvxe0vEjWLWAhcaDrB5EAGBKNckS0Hi3Pg/exec';
-
-  var allChecklistBoxes = {};
-  var checkedByEls = {};
-  var progressUpdaters = [];
-
-  function formatWhen(dateStr){
-    if (!dateStr) return '';
-    var d = new Date(dateStr);
-    if (isNaN(d.getTime())) return '';
-    return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
-  }
-
-  function registerChecklist(containerId, progressId, noun){
-    var container = document.getElementById(containerId);
-    if (!container) return;
-    var boxes = Array.prototype.slice.call(container.querySelectorAll('input[type="checkbox"]'));
-    var progress = progressId ? document.getElementById(progressId) : null;
-    function updateProgress(){
-      if (!progress) return;
-      var done = boxes.filter(function(b){ return b.checked; }).length;
-      progress.textContent = boxes.length ? (done + ' of ' + boxes.length + ' ' + noun) : '';
-    }
-    boxes.forEach(function(cb){
-      allChecklistBoxes[cb.dataset.store] = cb;
-      var meta = document.createElement('small');
-      meta.className = 'checked-by';
-      cb.closest('label.check').querySelector('span').appendChild(meta);
-      checkedByEls[cb.dataset.store] = meta;
-      var key = 'ttn-' + cb.dataset.store;
-      if (safeGet(key) === '1') {
-        cb.checked = true;
-        cb.closest('label.check').classList.add('checked');
+  /* ── Countdown ── */
+  var cdEl=document.getElementById('countdown');
+  if(cdEl){
+    // Departure: 18 Oct 2026 06:00 IST = UTC+5:30
+    var departure=new Date('2026-10-18T06:00:00+05:30');
+    var tripEnd=new Date('2026-10-28T23:59:00+05:30');
+    function pad(n){return String(n).padStart(2,'0')}
+    function renderCd(){
+      var now=new Date();
+      if(now>=tripEnd){
+        cdEl.innerHTML='<span class="cd-seg"><span class="cd-n">✓</span><span class="cd-u">done</span></span>';
+        return;
       }
-      cb.addEventListener('change', function(){
-        safeSet(key, cb.checked ? '1' : '0');
-        cb.closest('label.check').classList.toggle('checked', cb.checked);
-        updateProgress();
-        if (cb.checked && !currentWho()) nudgeForName(cb);
-        onLocalToggle(cb.dataset.store, cb.checked);
-      });
-    });
-    updateProgress();
-    progressUpdaters.push(updateProgress);
-  }
-  registerChecklist('docChecks', 'docProgress', 'carried');
-  registerChecklist('todoChecks', 'todoProgress', 'done');
-  registerChecklist('packClothing', null, '');
-  registerChecklist('packEssentials', null, '');
-  registerChecklist('packNepal', null, '');
-  (function(){
-    var groups = ['packClothing','packEssentials','packNepal'];
-    var allBoxes = [];
-    groups.forEach(function(id){
-      var el = document.getElementById(id);
-      if (el) allBoxes = allBoxes.concat(Array.prototype.slice.call(el.querySelectorAll('input[type="checkbox"]')));
-    });
-    var packProgress = document.getElementById('packProgress');
-    function updatePack(){
-      if (!packProgress) return;
-      var done = allBoxes.filter(function(b){ return b.checked; }).length;
-      packProgress.textContent = allBoxes.length ? (done + ' of ' + allBoxes.length + ' packed') : '';
+      if(now>=departure){
+        var dayNum=Math.floor((now-departure)/86400000)+1;
+        cdEl.innerHTML='<span class="cd-seg"><span class="cd-n">Day '+dayNum+'</span><span class="cd-u">on the trip — enjoy!</span></span>';
+        return;
+      }
+      var diff=departure-now;
+      var dd=Math.floor(diff/86400000);
+      var hh=Math.floor((diff%86400000)/3600000);
+      var mm=Math.floor((diff%3600000)/60000);
+      cdEl.innerHTML=
+        '<div class="cd-seg"><span class="cd-n">'+pad(dd)+'</span><span class="cd-u">days</span></div>'+
+        '<div class="cd-colon">:</div>'+
+        '<div class="cd-seg"><span class="cd-n">'+pad(hh)+'</span><span class="cd-u">hrs</span></div>'+
+        '<div class="cd-colon">:</div>'+
+        '<div class="cd-seg"><span class="cd-n">'+pad(mm)+'</span><span class="cd-u">min</span></div>';
     }
-    allBoxes.forEach(function(cb){ cb.addEventListener('change', updatePack); });
-    updatePack();
-    progressUpdaters.push(updatePack);
-  })();
+    renderCd();
+    setInterval(renderCd,60000);
+  }
 
-  var whoInputs = Array.prototype.slice.call(document.querySelectorAll('.who-input'));
-  var savedWho = safeGet('ttn-who');
-  whoInputs.forEach(function(inp){
-    if (savedWho) inp.value = savedWho;
-    inp.addEventListener('input', function(){
-      var v = inp.value.trim();
-      safeSet('ttn-who', v);
-      whoInputs.forEach(function(other){ if (other !== inp) other.value = inp.value; });
+  /* ── Wrap card body for collapse ── */
+  document.querySelectorAll('.tl-card').forEach(function(card){
+    var sections=card.querySelector('.tl-sections');
+    if(!sections) return;
+    var body=document.createElement('div');
+    body.className='tl-body';
+    card.insertBefore(body,sections);
+    body.appendChild(sections);
+  });
+
+  /* ── Collapsible cards + badge reposition ── */
+  document.querySelectorAll('.tl-head').forEach(function(head){
+    // Move badge next to date
+    var badge=head.querySelector('.day-badge');
+    var dateEl=head.querySelector('.tl-date');
+    if(badge&&dateEl){
+      var row=document.createElement('div');
+      row.className='tl-date-row';
+      dateEl.parentNode.insertBefore(row,dateEl);
+      row.appendChild(dateEl);
+      row.appendChild(badge);
+    }
+    // Inject chevron
+    var chev=document.createElement('div');
+    chev.className='tl-chevron';
+    chev.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="18" height="18"><path d="M6 9l6 6 6-6"/></svg>';
+    head.appendChild(chev);
+    head.addEventListener('click',function(){
+      head.closest('.tl-card').classList.toggle('collapsed');
     });
   });
-  function currentWho(){ return safeGet('ttn-who') || ''; }
-  function nudgeForName(nearEl){
-    var target = null;
-    var section = nearEl && nearEl.closest('section');
-    if (section) target = section.querySelector('.who-input');
-    if (!target) target = whoInputs[0];
-    if (!target) return;
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    target.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
-    target.classList.add('nudge');
-    target.placeholder = 'Type your name first!';
-    target.focus();
-    setTimeout(function(){ target.classList.remove('nudge'); }, 1600);
+
+  /* ── Stay tonight pills ── */
+  var stayMap={
+    d18:{type:'train', ico:'🚂', text:'Overnight train · <b>Mithilanchal Exp</b> to Darbhanga'},
+    d19:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Janakpur</b>'},
+    d20:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Kathmandu</b>'},
+    d21:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Kathmandu</b>'},
+    d22:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Pokhara</b>'},
+    d23:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Pokhara</b>'},
+    d24:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Pokhara</b>'},
+    d25:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Lumbini</b>'},
+    d26:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Lumbini</b>'},
+    d27:{type:'needed',ico:'🏨', text:'Hotel needed · <b>Raxaul</b>'},
+    d28:{type:'train', ico:'🚂', text:'Overnight train · <b>Mithila Express</b> to Howrah'},
+    d29:{type:'home',  ico:'🏡', text:'Staying at <b>Debasis\' place</b> · Rourkela'},
+    d30:{type:'home',  ico:'🏠', text:'<b>Home</b> · Bhubaneswar — trip complete!'}
+  };
+  Object.keys(stayMap).forEach(function(id){
+    var item=document.getElementById(id);
+    if(!item) return;
+    var card=item.querySelector('.tl-card');
+    var d=stayMap[id];
+    var pill=document.createElement('div');
+    pill.className='stay-pill '+d.type;
+    pill.innerHTML='<span class="sp-ico">'+d.ico+'</span><span class="sp-txt">Tonight: '+d.text+'</span>';
+    card.appendChild(pill);
+  });
+
+  /* ── WhatsApp share ── */
+  var waBtn=document.getElementById('waBtn');
+  if(waBtn){
+    var shareMsg=encodeURIComponent('🏔️ Nepal trip plan — 18 to 30 Oct 2026\n\nCheck the full day-by-day itinerary here: '+window.location.href);
+    waBtn.href='https://wa.me/?text='+shareMsg;
   }
 
-  function applyRemoteItems(items){
-    if (!items || !items.forEach) return;
-    items.forEach(function(item){
-      var cb = allChecklistBoxes[item.item_id];
-      if (!cb) return;
-      if (cb !== document.activeElement && cb.checked !== !!item.checked) {
-        cb.checked = !!item.checked;
-        cb.closest('label.check').classList.toggle('checked', cb.checked);
-        safeSet('ttn-' + item.item_id, cb.checked ? '1' : '0');
-      }
-      var meta = checkedByEls[item.item_id];
-      if (meta) {
-        var when = formatWhen(item.checked_at);
-        meta.textContent = (item.checked && item.checked_by) ? ('checked by ' + item.checked_by + (when ? ' · ' + when : '')) : '';
-      }
-    });
-    progressUpdaters.forEach(function(fn){ fn(); });
-  }
-
-  function onLocalToggle(itemId, checked){
-    if (!SHEET_SYNC_URL) return;
-    fetch(SHEET_SYNC_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({ item_id: itemId, checked: checked, checked_by: currentWho() })
-    }).then(function(res){ return res.json(); })
-      .then(applyRemoteItems)
-      .catch(function(err){ console.warn('Checklist sync (write) failed:', err); });
-  }
-
-  function fetchRemoteState(){
-    if (!SHEET_SYNC_URL) return;
-    fetch(SHEET_SYNC_URL)
-      .then(function(res){ return res.json(); })
-      .then(applyRemoteItems)
-      .catch(function(err){ console.warn('Checklist sync (read) failed:', err); });
-  }
-
-  if (SHEET_SYNC_URL) {
-    document.querySelectorAll('.who-inline').forEach(function(el){ el.classList.add('show'); });
-    fetchRemoteState();
-    setInterval(fetchRemoteState, 25000);
-  }
-
-  var cdEl = document.getElementById('countdown');
-  if (cdEl) {
-    var tripStart = new Date(2026, 9, 18);
-    var tripEnd = new Date(2026, 9, 27);
-    var now = new Date();
-    var msPerDay = 86400000;
-    var startMid = new Date(tripStart.getFullYear(), tripStart.getMonth(), tripStart.getDate());
-    var endMid = new Date(tripEnd.getFullYear(), tripEnd.getMonth(), tripEnd.getDate());
-    var nowMid = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    var toStart = Math.round((startMid - nowMid) / msPerDay);
-    var toEnd = Math.round((endMid - nowMid) / msPerDay);
-    if (toStart > 0) {
-      cdEl.innerHTML = '<span class="cd-num">' + toStart + '</span><span class="cd-label">day' + (toStart === 1 ? '' : 's') + ' until we leave for Kolkata</span>';
-    } else if (toStart <= 0 && toEnd >= 0) {
-      var dayNum = Math.round((nowMid - startMid) / msPerDay) + 1;
-      cdEl.innerHTML = '<span class="cd-num">Day ' + dayNum + '</span><span class="cd-label">of 10 — enjoy every bit of it</span>';
-    } else {
-      cdEl.innerHTML = '<span class="cd-num">✓</span><span class="cd-label">The trip is done — until next time</span>';
-    }
-  }
-
-  var mapEl = document.getElementById('tripMap');
-  if (mapEl && 'IntersectionObserver' in window && window.L) {
-    var stops = [
-      { id: 'd18', name: 'Bhubaneswar', coords: [20.2961, 85.8245], note: 'Day 0 · trip start', side: false },
-      { id: 'd18', name: 'Kolkata', coords: [22.5726, 88.3639], note: 'Day 0 · transit + city evening', side: false },
-      { id: 'd19', name: 'Darbhanga', coords: [26.1542, 85.8918], note: 'Day 1 · onward to Raxaul', side: false },
-      { id: 'd19', name: 'Raxaul – India/Nepal border', coords: [26.9773, 84.8459], note: 'Border staging', side: false },
-      { id: 'd20', name: 'Janakpur', coords: [26.7288, 85.9266], note: 'Nepal Day 1 · Ramayana heritage', side: false },
-      { id: 'd21', name: 'Dhanushadham', coords: [26.86, 86.02], note: 'Nepal Day 2 · Ramayana pilgrimage', side: true },
-      { id: 'd21', name: 'Lumbini', coords: [27.4833, 83.2767], note: 'Nepal Day 2–3 · Buddhist heritage', side: false },
-      { id: 'd23', name: 'Pokhara', coords: [28.2096, 83.9856], note: 'Nepal Day 4–6 · lakes + Himalayas', side: false },
-      { id: 'd24', name: 'Sarangkot', coords: [28.238, 83.953], note: 'Nepal Day 5 · sunrise viewpoint', side: true },
-      { id: 'd25', name: 'Manakamana', coords: [27.9667, 84.4833], note: 'Nepal Day 6 · mountain pilgrimage', side: true },
-      { id: 'd25', name: 'Kathmandu / Pashupatinath', coords: [27.7106, 85.3487], note: 'Nepal Day 6–7 · Shiva + Shakti', side: false },
-      { id: 'd27', name: 'Raxaul – return crossing', coords: [26.9773, 84.8459], note: 'Return journey', side: false },
-      { id: 'd27', name: 'Bhubaneswar', coords: [20.2961, 85.8245], note: 'Return · trip ends', side: false }
+  /* ── Map ── */
+  var mapEl=document.getElementById('tripMap');
+  if(mapEl&&'IntersectionObserver' in window&&window.L){
+    var stops=[
+      {id:'d18',name:'Bhubaneswar',coords:[20.2961,85.8245],note:'Trip start',side:false},
+      {id:'d18',name:'Howrah / Kolkata',coords:[22.5726,88.3639],note:'18 Oct · transit + overnight train',side:false},
+      {id:'d19',name:'Darbhanga',coords:[26.1542,85.8918],note:'19 Oct · onward to Janakpur',side:false},
+      {id:'d19',name:'Janakpur',coords:[26.7288,85.9266],note:'19 Oct · Ramayana &amp; Mithila heritage',side:false},
+      {id:'d20',name:'Kathmandu',coords:[27.7106,85.3487],note:'20–21 Oct · temples &amp; durbar squares',side:false},
+      {id:'d22',name:'Manakamana',coords:[27.9667,84.4833],note:'22 Oct · cable car &amp; pilgrimage',side:true},
+      {id:'d22',name:'Pokhara',coords:[28.2096,83.9856],note:'22–25 Oct · Himalayas &amp; lakes',side:false},
+      {id:'d23',name:'Sarangkot',coords:[28.238,83.953],note:'23 Oct · sunrise viewpoint',side:true},
+      {id:'d26',name:'Lumbini',coords:[27.4833,83.2767],note:'26 Oct · Buddhist heritage',side:false},
+      {id:'d27',name:'Birgunj',coords:[27.0,84.8667],note:'27 Oct · Nepal–India border town',side:false},
+      {id:'d27',name:'Raxaul',coords:[26.9773,84.8459],note:'27–28 Oct · border crossing &amp; return train',side:false},
     ];
+    var mainStops=stops.filter(function(s){return!s.side});
 
-    var initMap = function(){
-      if (mapEl.dataset.inited) return;
-      mapEl.dataset.inited = '1';
-      var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var map = L.map(mapEl, { scrollWheelZoom: false });
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 17,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors'
-      }).addTo(map);
+    function initMap(){
+      if(mapEl.dataset.inited)return;
+      mapEl.dataset.inited='1';
+      var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+      var map=L.map(mapEl,{scrollWheelZoom:false});
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>'}).addTo(map);
 
-      var stayNumber = 0;
-      var latlngs = [];
+      var n=0;
       stops.forEach(function(stop){
-        latlngs.push(stop.coords);
         var icon;
-        if (stop.side) {
-          icon = L.divIcon({ className: '', html: '<div class="map-pin side"></div>', iconSize: [14,14], iconAnchor: [7,7] });
+        if(stop.side){
+          icon=L.divIcon({className:'',html:'<div class="map-pin side"></div>',iconSize:[14,14],iconAnchor:[7,7]});
         } else {
-          stayNumber++;
-          icon = L.divIcon({ className: '', html: '<div class="map-pin"><b>'+stayNumber+'</b></div>', iconSize: [24,24], iconAnchor: [12,24] });
+          n++;
+          icon=L.divIcon({className:'',html:'<div class="map-pin"><b>'+n+'</b></div>',iconSize:[24,24],iconAnchor:[12,24]});
         }
-        L.marker(stop.coords, { icon: icon }).addTo(map)
+        L.marker(stop.coords,{icon:icon}).addTo(map)
           .bindPopup('<b>'+stop.name+'</b><br>'+stop.note+'<br><a href="#'+stop.id+'">View day →</a>');
       });
 
-      var routeColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#1d5c4a';
-      L.polyline(latlngs, { color: routeColor, weight: 3, opacity: .8, dashArray: '1,8', lineCap: 'round' }).addTo(map);
+      var clr=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#1d5c4a';
+      L.polyline(mainStops.map(function(s){return s.coords}),{color:clr,weight:3,opacity:.75,dashArray:'2,8',lineCap:'round'}).addTo(map);
+      map.fitBounds(L.latLngBounds(stops.map(function(s){return s.coords})),{padding:[28,28],animate:!reduce});
+    }
 
-      var bounds = L.latLngBounds(latlngs);
-      map.fitBounds(bounds, { padding: [28,28], animate: !reduce });
-    };
-
-    var mapObserver = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if (entry.isIntersecting) { initMap(); mapObserver.disconnect(); }
-      });
-    }, { rootMargin: '200px' });
-    mapObserver.observe(mapEl);
+    new IntersectionObserver(function(entries){
+      entries.forEach(function(e){if(e.isIntersecting){initMap();this.disconnect();}},this);
+    },{rootMargin:'200px'}).observe(mapEl);
   }
 })();
 </script>
